@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freileitung – Energieübertragung | Q1 Physik NRW</title>
+<style>
+:root{--bg:#070b14;--surface:#0d1320;--card:#111827;--card2:#161f30;--border:#1e2d45;--accent:#f0a500;--accent2:#e05c2e;--blue:#4fa3e0;--green:#3ecf8e;--red:#e05c2e;--text:#e8edf5;--muted:#6b7fa3}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:16px}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:20px}
+.app-header .logo{font-size:1.1rem;font-weight:700;color:var(--accent)}
+.app-header .sname{font-size:0.8rem;color:var(--muted);font-family:monospace}
+.progress-wrap{margin-bottom:20px}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:6px}
+.progress-label{font-size:0.65rem;color:var(--muted);font-family:monospace;text-transform:uppercase;letter-spacing:0.06em}
+.progress-label.active{color:var(--accent)}
+.progress-label.done{color:var(--green)}
+.progress-bar-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width 0.5s}
+.section{display:none}
+.section.active{display:block;animation:fi 0.35s ease}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px}
+.card-title{font-size:1.5rem;font-weight:700;color:var(--accent);margin-bottom:6px;line-height:1.2}
+.card-sub{color:var(--muted);font-size:0.88rem;margin-bottom:18px}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.7rem;font-family:monospace;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:14px}
+.tag-nrw{background:rgba(79,163,224,0.15);color:var(--blue);border:1px solid rgba(79,163,224,0.3)}
+.tag-sim{background:rgba(240,165,0,0.15);color:var(--accent);border:1px solid rgba(240,165,0,0.3)}
+.tag-info{background:rgba(62,207,142,0.12);color:var(--green);border:1px solid rgba(62,207,142,0.3)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 24px;border-radius:8px;border:none;font-size:0.92rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#000}
+.btn-step{background:var(--card2);color:var(--accent);border:1px solid var(--border);padding:8px 18px;border-radius:8px;font-size:0.86rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-step:disabled{opacity:0.4;cursor:not-allowed}
+.btn-sm{padding:7px 16px;font-size:0.83rem}
+.fact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.fact-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.fact-num{font-size:1.6rem;font-weight:700;color:var(--accent)}
+.fact-label{font-size:0.74rem;color:var(--muted);margin-top:4px}
+.think-box{background:rgba(240,165,0,0.06);border:1px solid rgba(240,165,0,0.25);border-radius:10px;padding:18px;margin:14px 0}
+.think-box h4{color:var(--accent);margin-bottom:8px;font-size:0.92rem}
+.think-box p{font-size:0.9rem;line-height:1.7}
+.info-row{display:flex;gap:10px;align-items:flex-start;background:rgba(79,163,224,0.07);border:1px solid rgba(79,163,224,0.2);border-radius:8px;padding:13px;margin:10px 0}
+.info-row .icon{font-size:1.2rem;flex-shrink:0}
+.info-row p{font-size:0.86rem;line-height:1.6}
+.sim-tabs{display:flex;gap:8px;margin-bottom:18px}
+.sim-tab{flex:1;padding:10px;text-align:center;border-radius:8px;border:1px solid var(--border);background:var(--card2);cursor:pointer;font-weight:600;font-size:0.88rem;font-family:inherit;color:var(--text)}
+.sim-tab.active{background:rgba(240,165,0,0.15);border-color:var(--accent);color:var(--accent)}
+.slider-row{margin:12px 0}
+.slider-row label{display:flex;justify-content:space-between;font-size:0.86rem;margin-bottom:5px}
+.slider-row label span{color:var(--accent);font-family:monospace;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.metric-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px}
+.metric-label{font-size:0.73rem;color:var(--muted);font-family:monospace}
+.metric-value{font-size:1.2rem;font-family:monospace;font-weight:600;color:var(--blue);margin-top:3px}
+.metric-value.warn{color:var(--accent2)}
+.metric-value.good{color:var(--green)}
+.sim-canvas-wrap{background:#0a0f1a;border:1px solid var(--border);border-radius:10px;padding:10px;margin:12px 0}
+canvas{display:block;width:100%;border-radius:6px}
+.sim-question{background:rgba(240,165,0,0.06);border:1px solid rgba(240,165,0,0.2);border-radius:8px;padding:14px;margin-top:14px}
+.sim-question p{font-size:0.88rem;margin-bottom:10px}
+.step-indicator{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.step-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-family:monospace;color:var(--muted);transition:all 0.3s}
+.step-dot.active{border-color:var(--accent);background:rgba(240,165,0,0.15);color:var(--accent)}
+.step-dot.done{border-color:var(--green);background:rgba(62,207,142,0.12);color:var(--green)}
+.step-content{display:none;animation:fi 0.3s ease}
+.step-content.visible{display:block}
+.step-nav{display:flex;gap:10px;margin-top:18px;align-items:center}
+.step-count{color:var(--muted);font-size:0.83rem;font-family:monospace;margin-left:auto}
+.formula-box{background:#080d16;border:1px solid var(--border);border-radius:10px;padding:18px;margin:14px 0;text-align:center;font-family:monospace;font-size:1.05rem;overflow-x:auto;line-height:1.8}
+.formula-box.highlight{border-color:var(--accent);background:rgba(240,165,0,0.04)}
+.formula-big{font-size:1.25rem;font-weight:700;color:var(--accent)}
+/* robuste Bruchdarstellung für Formeln */
+.mf{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;vertical-align:middle;margin:0 0.28em;line-height:1.05;font-family:monospace}
+.mf .num{display:block;border-bottom:1.6px solid currentColor;padding:0 0.35em 0.16em;white-space:nowrap}
+.mf .den{display:block;padding:0.16em 0.35em 0;white-space:nowrap}
+.formula-box sub{font-size:0.72em;vertical-align:sub}
+.formula-box sup{font-size:0.72em;vertical-align:super}
+
+.expl-text{line-height:1.8;font-size:0.93rem;margin:10px 0}
+.expl-text strong{color:var(--accent)}
+.task-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+.task-meta{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.afb-badge{padding:3px 10px;border-radius:20px;font-size:0.7rem;font-family:monospace;font-weight:600}
+.afb1{background:rgba(62,207,142,0.12);color:var(--green);border:1px solid rgba(62,207,142,0.3)}
+.afb2{background:rgba(79,163,224,0.12);color:var(--blue);border:1px solid rgba(79,163,224,0.3)}
+.afb3{background:rgba(224,92,46,0.12);color:var(--accent2);border:1px solid rgba(224,92,46,0.3)}
+.type-badge{padding:3px 10px;border-radius:20px;font-size:0.7rem;font-family:monospace;background:var(--card2);border:1px solid var(--border);color:var(--muted)}
+.task-q{font-size:0.95rem;line-height:1.7;margin-bottom:16px}
+.mc-options{display:flex;flex-direction:column;gap:8px}
+.mc-opt{padding:11px 15px;border-radius:8px;border:1px solid var(--border);background:var(--card2);cursor:pointer;font-size:0.9rem;text-align:left;font-family:inherit;color:var(--text)}
+.mc-opt.correct{border-color:var(--green) !important;background:rgba(62,207,142,0.12) !important;color:var(--green)}
+.mc-opt.wrong{border-color:var(--red) !important;background:rgba(224,92,46,0.12) !important;color:var(--accent2)}
+.mc-opt:disabled{cursor:not-allowed}
+.gap-text{font-size:0.92rem;line-height:2.6;margin-bottom:14px}
+.gap-slot{display:inline-flex;align-items:center;justify-content:center;min-width:100px;height:30px;border-radius:6px;border:2px dashed var(--border);background:var(--card2);padding:0 8px;margin:0 3px;cursor:pointer;font-family:monospace;font-size:0.82rem;color:var(--muted);vertical-align:middle}
+.gap-slot.filled{border-style:solid;border-color:var(--blue);color:var(--text);background:rgba(79,163,224,0.1)}
+.gap-slot.correct{border-color:var(--green);color:var(--green);background:rgba(62,207,142,0.1);border-style:solid}
+.gap-slot.wrong{border-color:var(--red);color:var(--accent2);background:rgba(224,92,46,0.1);border-style:solid}
+.drag-pool{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.drag-chip{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card2);font-family:monospace;font-size:0.82rem;cursor:pointer;user-select:none;color:var(--text)}
+.drag-chip.selected{border-color:var(--accent);background:rgba(240,165,0,0.15);color:var(--accent)}
+.drag-chip.used{opacity:0.3;pointer-events:none}
+.calc-input-row{display:flex;gap:8px;align-items:center;margin:12px 0;flex-wrap:wrap}
+.calc-input{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;color:var(--text);font-family:monospace;font-size:0.98rem;width:150px;-webkit-appearance:none;appearance:none}
+.calc-input:focus{outline:none;border-color:var(--accent)}
+.calc-input.correct{border-color:var(--green)}
+.calc-input.wrong{border-color:var(--red)}
+.calc-unit{color:var(--muted);font-family:monospace;font-size:0.88rem}
+.feedback-box{padding:11px 14px;border-radius:8px;margin-top:10px;font-size:0.86rem;line-height:1.6;display:none}
+.feedback-box.show{display:block}
+.correct-fb{background:rgba(62,207,142,0.1);border:1px solid rgba(62,207,142,0.3);color:var(--green)}
+.wrong-fb{background:rgba(224,92,46,0.1);border:1px solid rgba(224,92,46,0.3);color:var(--accent2)}
+.task-progress-bar{height:5px;background:var(--border);border-radius:3px;margin:10px 0 18px;overflow:hidden}
+.task-progress-fill{height:100%;background:var(--green);border-radius:3px;transition:width 0.4s}
+.end-screen{text-align:center;padding:30px 10px}
+.end-score{font-size:3rem;font-weight:700;color:var(--accent)}
+.score-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;text-align:center}
+.score-col{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.score-col .num{font-size:1.7rem;font-weight:700}
+.score-col .lbl{font-size:0.72rem;color:var(--muted);margin-top:3px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:100}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px 28px;max-width:420px;width:92%;text-align:center}
+.modal-title{font-size:1.7rem;font-weight:700;color:var(--accent);margin-bottom:6px}
+.modal-sub{color:var(--muted);font-size:0.88rem;margin-bottom:24px;line-height:1.6}
+.name-input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:13px 16px;color:var(--text);font-size:1rem;margin-bottom:18px;font-family:inherit;-webkit-appearance:none;appearance:none}
+.name-input:focus{outline:none;border-color:var(--accent)}
+@media(max-width:600px){.fact-grid{grid-template-columns:1fr 1fr}.score-breakdown{grid-template-columns:1fr}}
+
+.hypothesis-box textarea{width:100%;min-height:90px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:12px;font-family:inherit;font-size:0.92rem;resize:vertical;margin-top:8px}
+.scenario-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.scenario-btn{background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 8px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;text-align:center}
+.scenario-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(240,165,0,0.08)}
+.teacher-panel{background:rgba(79,163,224,0.06);border:1px dashed rgba(79,163,224,0.35);border-radius:10px;padding:14px;margin:16px 0}
+.teacher-panel h4{color:var(--blue);margin-bottom:8px;font-size:0.92rem}
+.teacher-actions{display:flex;flex-wrap:wrap;gap:8px}
+.teacher-note{font-size:0.78rem;color:var(--muted);line-height:1.5;margin-top:8px}
+.teacher-lock{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 10px}
+.teacher-lock input{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:inherit;min-width:180px}
+.teacher-actions.locked{display:none}
+.formula-var{font-family:monospace;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.diff-box{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:12px}
+.diff-box h4{font-size:0.9rem;margin-bottom:5px}
+.diff-box p{font-size:0.82rem;color:var(--muted);line-height:1.5}
+@media(max-width:700px){.scenario-grid,.diff-grid{grid-template-columns:1fr 1fr}.progress-labels{gap:6px;overflow-x:auto}.progress-label{white-space:nowrap}.card{padding:18px}.btn,.btn-step,.mc-opt{min-height:44px}.metrics-grid{grid-template-columns:1fr}.app-header{align-items:flex-start;gap:8px;flex-direction:column}}
+@media(max-width:480px){.scenario-grid,.diff-grid,.fact-grid{grid-template-columns:1fr}.card-title{font-size:1.25rem}}
+
+/* Abgabe- und sequenzielle Aufgabensteuerung */
+.abgabe-panel{background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.35);border-radius:10px;padding:14px;margin:14px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.abgabe-panel p{font-size:0.86rem;line-height:1.55;color:var(--text);margin:0;flex:1;min-width:240px}
+.abgabe-btn{background:var(--green);color:#03120b;font-weight:800}
+.task-card.task-locked{display:none}
+.next-task-note{background:rgba(240,165,0,0.08);border:1px dashed rgba(240,165,0,0.5);border-radius:8px;padding:10px 12px;margin:10px 0 16px;color:var(--accent);font-size:0.86rem;line-height:1.5}
+.compare-table{width:100%;border-collapse:collapse;margin:14px 0;background:#080d16;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:table}
+.compare-table th,.compare-table td{border-bottom:1px solid var(--border);padding:10px;text-align:left;font-size:0.84rem;line-height:1.45;vertical-align:top}
+.compare-table th{background:var(--card2);color:var(--accent);font-family:monospace}
+.compare-table tr:last-child td{border-bottom:none}
+.explain-focus{background:rgba(240,165,0,0.07);border:1px solid rgba(240,165,0,0.25);border-radius:10px;padding:14px;margin:14px 0;line-height:1.7;font-size:0.92rem}
+.explain-focus strong{color:var(--accent)}
+@media(max-width:600px){.abgabe-panel{display:block}.abgabe-panel .btn{width:100%;justify-content:center;margin-top:10px}.compare-table{font-size:0.78rem}}
+
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="nameModal">
+  <div class="modal-box">
+    <div class="modal-title">⚡ Freileitung</div>
+    <div class="modal-sub">Q1 Grundkurs Physik · NRW<br>Gib deinen Namen oder ein Kürzel ein, bevor es losgeht.</div>
+    <input class="name-input" id="nameInput" type="text" placeholder="Name oder Kürzel" maxlength="60">
+    <button class="btn btn-primary" style="width:100%" onclick="startApp()">Lernmission starten →</button>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+<div class="app-header"><div class="logo">⚡ Freileitung</div><div class="sname" id="headerName">–</div></div>
+<div class="progress-wrap">
+  <div class="progress-labels">
+    <span class="progress-label" id="lbl0">01 Einstieg</span>
+    <span class="progress-label" id="lbl1">02 Simulation</span>
+    <span class="progress-label" id="lbl2">03 Erklärung</span>
+    <span class="progress-label" id="lbl3">04 Herleitung</span>
+    <span class="progress-label" id="lbl4">05 Aufgaben</span>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<!-- SEC 1 -->
+<div class="section active" id="sec0">
+<div class="card">
+<div class="tag tag-nrw">Q1 · Inhaltsfeld 6 · NRW</div>
+<div class="card-title">Energie über weite Strecken</div>
+<div class="card-sub">Wie kommt der Strom vom Windpark in die Steckdose?</div>
+<div style="background:#0a0f1a;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px">
+<svg viewBox="0 0 860 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="860" height="180" fill="#0a0f1a"/>
+<rect y="155" width="860" height="25" fill="#0d1520"/>
+<line x1="120" y1="155" x2="120" y2="30" stroke="#2a3c5a" stroke-width="5"/>
+<line x1="100" y1="60" x2="140" y2="60" stroke="#2a3c5a" stroke-width="4"/>
+<line x1="95" y1="45" x2="145" y2="45" stroke="#2a3c5a" stroke-width="4"/>
+<line x1="380" y1="155" x2="380" y2="30" stroke="#2a3c5a" stroke-width="5"/>
+<line x1="360" y1="60" x2="400" y2="60" stroke="#2a3c5a" stroke-width="4"/>
+<line x1="355" y1="45" x2="405" y2="45" stroke="#2a3c5a" stroke-width="4"/>
+<line x1="640" y1="155" x2="640" y2="30" stroke="#2a3c5a" stroke-width="5"/>
+<line x1="620" y1="60" x2="660" y2="60" stroke="#2a3c5a" stroke-width="4"/>
+<line x1="615" y1="45" x2="665" y2="45" stroke="#2a3c5a" stroke-width="4"/>
+<path d="M95,45 Q250,68 355,45" fill="none" stroke="#f0a500" stroke-width="2"/>
+<path d="M145,45 Q250,68 405,45" fill="none" stroke="#f0a500" stroke-width="2"/>
+<path d="M355,45 Q510,68 615,45" fill="none" stroke="#f0a500" stroke-width="2"/>
+<path d="M405,45 Q510,68 665,45" fill="none" stroke="#f0a500" stroke-width="2"/>
+<path d="M100,60 Q250,83 360,60" fill="none" stroke="#4fa3e0" stroke-width="1.5" stroke-dasharray="4,4"/>
+<path d="M140,60 Q250,83 400,60" fill="none" stroke="#4fa3e0" stroke-width="1.5" stroke-dasharray="4,4"/>
+<line x1="30" y1="155" x2="30" y2="90" stroke="#1e2d45" stroke-width="3"/>
+<circle cx="30" cy="90" r="3" fill="#f0a500"/>
+<line x1="30" y1="90" x2="30" y2="65" stroke="#f0a500" stroke-width="2"/>
+<line x1="30" y1="90" x2="8" y2="103" stroke="#f0a500" stroke-width="2"/>
+<line x1="30" y1="90" x2="52" y2="103" stroke="#f0a500" stroke-width="2"/>
+<rect x="740" y="115" width="50" height="40" fill="#1a2a3a" stroke="#2a3c5a" stroke-width="1"/>
+<polygon points="740,115 790,115 765,95" fill="#1e3550" stroke="#2a3c5a" stroke-width="1"/>
+<rect x="758" y="133" width="14" height="22" fill="#f0a50044"/>
+<text x="28" y="173" font-family="system-ui" font-size="10" fill="#6b7fa3" text-anchor="middle">Windpark</text>
+<text x="380" y="173" font-family="system-ui" font-size="10" fill="#6b7fa3" text-anchor="middle">380 kV Freileitung</text>
+<text x="765" y="173" font-family="system-ui" font-size="10" fill="#6b7fa3" text-anchor="middle">Verbraucher</text>
+<text x="200" y="38" font-family="monospace" font-size="9" fill="#f0a500">Hochspannung 380 kV AC</text>
+</svg>
+</div>
+<div class="fact-grid">
+<div class="fact-box"><div class="fact-num">380 kV</div><div class="fact-label">Höchstspannung im deutschen Übertragungsnetz</div></div>
+<div class="fact-box"><div class="fact-num">~35 000 km</div><div class="fact-label">Länge des deutschen Übertragungsnetzes</div></div>
+<div class="fact-box"><div class="fact-num">&lt; 3 %</div><div class="fact-label">Typische Übertragungsverluste</div></div>
+</div>
+<div class="think-box"><h4>💭 Denke nach – bevor du weitergehst</h4><p>Windparks in der Nordsee liefern Strom für Bayern – über 800 km. Warum nutzt man dabei Spannungen von mehreren hunderttausend Volt? Wäre niedrigere Spannung nicht sicherer? Notiere dir kurz deine Vermutung.</p></div>
+<div class="hypothesis-box think-box">
+  <h4>✍️ Meine Anfangsvermutung</h4>
+  <p>Formuliere deine Vermutung in 1–3 Sätzen. Du kannst sie am Ende mit der physikalischen Erklärung vergleichen.</p>
+  <textarea id="hypothesisInput" placeholder="Ich vermute, dass ..."></textarea>
+</div>
+
+<div class="info-row"><span class="icon">📚</span><p><strong>NRW Lehrplan (Inhaltsfeld 6):</strong> Energieübertragung und -verteilung – du lernst heute, warum Hochspannung bei der Energieübertragung entscheidend ist.</p></div>
+<div style="margin-top:20px;display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="goSection(1)">Zur Simulation →</button></div>
+</div>
+</div>
+
+<!-- SEC 2 -->
+<div class="section" id="sec1">
+<div class="card">
+<div class="tag tag-sim">Interaktive Simulation</div>
+<div class="card-title">Freileitung simulieren</div>
+<div class="card-sub">Stelle Spannung und Leistung ein und beobachte die Auswirkungen.</div>
+<div class="scenario-grid">
+  <button class="scenario-btn" onclick="setScenario('low')">Niederspannung<br><span style="color:var(--muted);font-size:0.75em">hohe Verluste</span></button>
+  <button class="scenario-btn" onclick="setScenario('high')">Hochspannung<br><span style="color:var(--muted);font-size:0.75em">Standardfall</span></button>
+  <button class="scenario-btn" onclick="setScenario('wind')">Windpark → Süden<br><span style="color:var(--muted);font-size:0.75em">lange Strecke</span></button>
+  <button class="scenario-btn" onclick="setScenario('extreme')">Extremfall<br><span style="color:var(--muted);font-size:0.75em">Leitung wird heiß</span></button>
+</div>
+<div class="info-row" id="scenarioInfo"><span class="icon">🎛️</span><p>Nutze zuerst ein Szenario und verändere danach einzelne Regler. Ziel: Erkenne, welche Größe den stärksten Einfluss auf die Verluste hat.</p></div>
+
+<div class="sim-tabs">
+<button class="sim-tab active" id="tabAC" onclick="switchSimTab('AC')">🔄 Wechselspannung (AC)</button>
+<button class="sim-tab" id="tabDC" onclick="switchSimTab('DC')">➡️ Gleichspannung (DC)</button>
+</div>
+<div id="simACi" class="info-row"><span class="icon">⚡</span><p><strong>Wechselspannung (AC):</strong> Mit einem Transformator kann die Spannung verlustarm hoch- und runtertransformiert werden – die Grundlage moderner Stromnetze.</p></div>
+<div id="simDCi" class="info-row" style="display:none"><span class="icon">🔋</span><p><strong>Gleichspannung (DC):</strong> Historisch war DC schwer hoch- und herunterzusetzen. Moderne HGÜ kann heute sehr hohe Gleichspannungen nutzen und ist bei langen Punkt-zu-Punkt-Strecken sinnvoll.</p></div>
+<div class="slider-row"><label>Übertragungsspannung U₂ <span id="sv_U2">100 kV</span></label><input type="range" id="sl_U2" min="10" max="400" value="100" step="10" oninput="updateSim()"></div>
+<div class="slider-row"><label>Übertragene Leistung P <span id="sv_P">100 MW</span></label><input type="range" id="sl_P" min="10" max="500" value="100" step="10" oninput="updateSim()"></div>
+<div class="slider-row"><label>Leitungswiderstand R_L <span id="sv_R">10 Ω</span></label><input type="range" id="sl_R" min="1" max="50" value="10" step="1" oninput="updateSim()"></div>
+<!-- Full circuit canvas -->
+<div class="sim-canvas-wrap" style="padding:0">
+<canvas id="simCanvas" height="320" style="border-radius:10px"></canvas>
+</div>
+<!-- Metrics below -->
+<div class="metrics-grid">
+<div class="metric-box"><div class="metric-label">Strom in Freileitung I</div><div class="metric-value" id="mI">–</div></div>
+<div class="metric-box"><div class="metric-label">Spannungsabfall U_L</div><div class="metric-value" id="mUL">–</div></div>
+<div class="metric-box"><div class="metric-label">Verlustleistung P_V</div><div class="metric-value" id="mPV">–</div></div>
+<div class="metric-box"><div class="metric-label">Wirkungsgrad η</div><div class="metric-value" id="mEta">–</div></div>
+</div>
+<div class="explain-focus" id="scenarioExplanation">
+  <strong>So liest du die Simulation:</strong> Die übertragene Leistung <span class="formula-var">P</span> ist die elektrische Leistung, die am Verbraucher bereitgestellt werden soll. Für eine gegebene Leistung gilt <span class="formula-var">I = P / U</span>. Eine kleinere Übertragungsspannung erzwingt daher einen größeren Leitungsstrom. Dieser Strom verursacht am Leitungswiderstand <span class="formula-var">R<sub>L</sub></span> Joule'sche Wärmeverluste nach <span class="formula-var">P<sub>V</sub> = I<sup>2</sup> · R<sub>L</sub></span>. Der Leitungswiderstand hängt vom Material, der Länge und dem Querschnitt der Leiter ab.
+</div>
+<table class="compare-table" aria-label="Vergleich der Szenarien">
+  <tr><th>Szenario</th><th>Was wird verglichen?</th><th>Physikalische Deutung</th></tr>
+  <tr><td>Niederspannung</td><td>Relativ kleine Spannung bei gleicher Leistung.</td><td>Der Leitungsstrom wird groß. Aufgrund der quadratischen Abhängigkeit <span class="formula-var">P<sub>V</sub> ∼ I<sup>2</sup></span> steigen die thermischen Verluste stark an.</td></tr>
+  <tr><td>Hochspannung</td><td>Gleiche Leistung, aber deutlich größere Spannung.</td><td>Der Leitungsstrom sinkt. Dadurch verringern sich Spannungsabfall, Erwärmung und Verlustleistung deutlich.</td></tr>
+  <tr><td>Windpark → Süden</td><td>Große Leistung und lange Strecke.</td><td>Lange Leitungen bedeuten größeres R<sub>L</sub>. Deshalb braucht man sehr hohe Spannungen, damit die Verluste nicht zu groß werden.</td></tr>
+  <tr><td>Extremfall</td><td>Große Leistung, niedrige Spannung und großer Leitungswiderstand.</td><td>Dieser Fall zeigt die technische Grenze: hoher Strom, großer Spannungsabfall, starke Leitererwärmung und niedriger Wirkungsgrad.</td></tr>
+</table>
+<div class="sim-question">
+<p><strong>🔍 Frage 1:</strong> Was passiert mit P_V, wenn du die Spannung U₂ verdoppelst?</p>
+<div class="mc-options" id="simq1">
+<button class="mc-opt" onclick="answerSimQ(1,0)">A) P_V verdoppelt sich</button>
+<button class="mc-opt" onclick="answerSimQ(1,1)">B) P_V halbiert sich</button>
+<button class="mc-opt" onclick="answerSimQ(1,2)">C) P_V wird ein Viertel so groß</button>
+<button class="mc-opt" onclick="answerSimQ(1,3)">D) P_V bleibt gleich</button>
+</div>
+<div class="feedback-box" id="simfb1"></div>
+</div>
+<div class="sim-question" style="margin-top:12px">
+<p><strong>🔍 Frage 2:</strong> Warum wird im klassischen Stromnetz überwiegend AC verwendet?</p>
+<div class="mc-options" id="simq2">
+<button class="mc-opt" onclick="answerSimQ(2,0)">A) Wechselspannung ist generell gefährlicher</button>
+<button class="mc-opt" onclick="answerSimQ(2,1)">B) DC-Leitungen haben höheren Widerstand</button>
+<button class="mc-opt" onclick="answerSimQ(2,2)">C) AC-Spannung lässt sich im klassischen Netz mit Transformatoren einfach hoch- und runtersetzen</button>
+<button class="mc-opt" onclick="answerSimQ(2,3)">D) AC-Strom fließt schneller durch die Leitung</button>
+</div>
+<div class="feedback-box" id="simfb2"></div>
+</div>
+<div style="margin-top:20px;display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="goSection(2)">Zur Erklärung →</button></div>
+</div>
+</div>
+
+<!-- SEC 3 -->
+<div class="section" id="sec2">
+<div class="card">
+<div class="tag tag-info">Physikalische Erklärung</div>
+<div class="card-title">Warum Hochspannung?</div>
+<div class="card-sub">Klicke dich Schritt für Schritt durch die Erklärung.</div>
+<div class="step-indicator" id="explDots"></div>
+<div class="step-content visible" id="expl0">
+<h3 style="color:var(--blue);margin-bottom:10px">⚡ Das eigentliche Problem: Nicht die Energie, sondern der Strom macht die Leitung heiß</h3>
+<p class="expl-text">Eine Freileitung besteht aus Metall. Metall leitet zwar gut, aber nicht perfekt. Jeder Kilometer Leitung hat einen kleinen elektrischen Widerstand. Bei einer langen Trasse addieren sich diese kleinen Widerstände zu einem messbaren <strong>Leitungswiderstand R<sub>L</sub></strong>.</p>
+<p class="expl-text">Sobald Strom durch diesen Widerstand fließt, wird ein Teil der elektrischen Energie in <strong>Wärme</strong> umgewandelt. Diese Energie kommt dann nicht mehr beim Verbraucher an. Genau das nennt man <strong>Übertragungsverlust</strong>.</p>
+<div class="formula-box">P<sub>V</sub> = I<sup>2</sup> · R<sub>L</sub><br><span style="font-size:0.8rem;color:var(--muted)">P<sub>V</sub>: Verlustleistung · I: Stromstärke · R<sub>L</sub>: Leitungswiderstand</span></div>
+<div class="explain-focus"><strong>Der entscheidende Punkt:</strong> Der Strom steht im Quadrat. Wenn der Strom doppelt so groß wird, werden die Verluste viermal so groß. Wenn der Strom zehnmal so groß wird, werden die Verluste hundertmal so groß.</div>
+<div class="info-row"><span class="icon">🌡️</span><p>Hohe Ströme erwärmen Freileitungen. Dadurch dehnen sie sich aus, hängen stärker durch und verlieren Energie an die Umgebung. Das ist nicht nur ineffizient, sondern auch ein technisches Sicherheitsproblem.</p></div>
+</div>
+<div class="step-content" id="expl1">
+<h3 style="color:var(--blue);margin-bottom:10px">🔌 Warum niedrige Spannung bei großer Leistung problematisch ist</h3>
+<p class="expl-text">Ein Verbraucher braucht eine bestimmte Leistung P. Ein Kraftwerk oder Windpark muss diese Leistung liefern. Für elektrische Leistung gilt:</p>
+<div class="formula-box">P = U · I &nbsp;&nbsp; ⇒ &nbsp;&nbsp; I = <span class="mf"><span class="num">P</span><span class="den">U</span></span></div>
+<p class="expl-text">Wenn die Leistung gleich bleiben soll, gibt es zwei Möglichkeiten: entweder kleine Spannung und großer Strom – oder große Spannung und kleiner Strom. Für die Leitung ist der zweite Fall viel besser.</p>
+<table class="compare-table">
+<tr><th>Fall</th><th>Folge für den Strom</th><th>Folge für die Leitung</th></tr>
+<tr><td>Kleine Spannung</td><td>Der Strom muss groß sein.</td><td>Große Wärmeverluste, schlechter Wirkungsgrad.</td></tr>
+<tr><td>Große Spannung</td><td>Der Strom kann klein sein.</td><td>Kleine Wärmeverluste, hoher Wirkungsgrad.</td></tr>
+</table>
+<div class="explain-focus"><strong>Merksatz:</strong> Hochspannung spart nicht direkt Energie. Hochspannung sorgt dafür, dass für dieselbe Leistung ein viel kleinerer Strom fließt. Dadurch sinkt die Verlustleistung.</div>
+</div>
+<div class="step-content" id="expl2">
+<h3 style="color:var(--blue);margin-bottom:10px">🔄 Warum das klassische Stromnetz Wechselspannung nutzt</h3>
+<p class="expl-text">Im klassischen Stromnetz wird die Spannung mehrfach verändert: direkt nach dem Kraftwerk oder Windpark wird sie hochtransformiert, auf der langen Strecke mit hoher Spannung übertragen und in der Nähe der Verbraucher wieder heruntertransformiert.</p>
+<div class="formula-box"><span class="mf"><span class="num">U<sub>1</sub></span><span class="den">U<sub>2</sub></span></span> = <span class="mf"><span class="num">N<sub>1</sub></span><span class="den">N<sub>2</sub></span></span> &nbsp;&nbsp; und &nbsp;&nbsp; P = U · I</div>
+<p class="expl-text">Transformatoren arbeiten mit Wechselspannung besonders einfach. Darum ist AC historisch und im vermaschten Stromnetz so wichtig. Die Spannung kann je nach Netzebene angepasst werden: hohe Spannung für lange Strecken, niedrige Spannung für Haushalte.</p>
+<div class="info-row"><span class="icon">⚖️</span><p><strong>Wichtig für die fachliche Genauigkeit:</strong> Gleichspannung ist nicht „schlecht“. Moderne Hochspannungs-Gleichstrom-Übertragung (HGÜ) nutzt Leistungselektronik und ist bei langen Punkt-zu-Punkt-Verbindungen, Seekabeln oder Offshore-Anbindungen sehr sinnvoll. Für das klassische Verteilnetz bleibt AC aber besonders praktisch.</p></div>
+<div class="explain-focus"><strong>Vergleich:</strong> AC ist wie ein System mit einfachen Zahnrädern für Spannungsänderungen. HGÜ ist leistungsfähig, braucht aber aufwendige Umrichterstationen am Anfang und Ende.</div>
+</div>
+<div class="step-content" id="expl3">
+<h3 style="color:var(--blue);margin-bottom:10px">🏗️ Das Netzebenenmodell: Warum nicht überall 230 V?</h3>
+<p class="expl-text">Haushalte nutzen ungefähr 230 V. Diese Spannung ist für Geräte geeignet, aber nicht für den Transport großer Leistungen über hunderte Kilometer. Würde man riesige Leistungen mit 230 V übertragen, wären die Ströme extrem groß und die Leitungen würden enorme Mengen Energie als Wärme verlieren.</p>
+<svg viewBox="0 0 700 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;background:#080d16;margin:12px 0">
+<rect x="5" y="15" width="130" height="45" rx="5" fill="#0d1828" stroke="#f0a500" stroke-width="1.5"/>
+<text x="70" y="35" font-family="system-ui" font-size="10" fill="#f0a500" text-anchor="middle">Kraftwerk</text><text x="70" y="50" font-family="monospace" font-size="9" fill="#e8edf5" text-anchor="middle">10–30 kV</text>
+<line x1="135" y1="37" x2="165" y2="37" stroke="#6b7fa3" stroke-width="1.5"/><polygon points="163,33 171,37 163,41" fill="#6b7fa3"/><text x="150" y="30" font-family="monospace" font-size="8" fill="#f0a500" text-anchor="middle">↑ Trafo</text>
+<rect x="171" y="15" width="130" height="45" rx="5" fill="#0d1828" stroke="#4fa3e0" stroke-width="1.5"/><text x="236" y="35" font-family="system-ui" font-size="10" fill="#4fa3e0" text-anchor="middle">Übertragung</text><text x="236" y="50" font-family="monospace" font-size="9" fill="#e8edf5" text-anchor="middle">220–380 kV</text>
+<line x1="301" y1="37" x2="331" y2="37" stroke="#6b7fa3" stroke-width="1.5"/><polygon points="329,33 337,37 329,41" fill="#6b7fa3"/><text x="316" y="30" font-family="monospace" font-size="8" fill="#4fa3e0" text-anchor="middle">↓ Trafo</text>
+<rect x="337" y="15" width="130" height="45" rx="5" fill="#0d1828" stroke="#3ecf8e" stroke-width="1.5"/><text x="402" y="35" font-family="system-ui" font-size="10" fill="#3ecf8e" text-anchor="middle">Verteilnetz</text><text x="402" y="50" font-family="monospace" font-size="9" fill="#e8edf5" text-anchor="middle">10–110 kV</text>
+<line x1="467" y1="37" x2="497" y2="37" stroke="#6b7fa3" stroke-width="1.5"/><polygon points="495,33 503,37 495,41" fill="#6b7fa3"/><text x="482" y="30" font-family="monospace" font-size="8" fill="#3ecf8e" text-anchor="middle">↓ Trafo</text>
+<rect x="503" y="15" width="185" height="45" rx="5" fill="#0d1828" stroke="#6b7fa3" stroke-width="1.5"/><text x="595" y="35" font-family="system-ui" font-size="10" fill="#e8edf5" text-anchor="middle">Hausanschluss</text><text x="595" y="50" font-family="monospace" font-size="9" fill="#e8edf5" text-anchor="middle">230/400 V</text>
+</svg>
+<table class="compare-table">
+<tr><th>Netzebene</th><th>Aufgabe</th><th>Warum diese Spannung?</th></tr>
+<tr><td>Höchstspannung</td><td>Transport über große Entfernungen.</td><td>Kleiner Strom und geringe Verluste.</td></tr>
+<tr><td>Mittelspannung</td><td>Regionale Verteilung.</td><td>Kompromiss aus Reichweite, Sicherheit und Kosten.</td></tr>
+<tr><td>Niederspannung</td><td>Versorgung von Haushalten.</td><td>Für Geräte nutzbar und sicherer handhabbar.</td></tr>
+</table>
+<p class="expl-text">Das Stromnetz nutzt also nicht „eine beste Spannung“, sondern je nach Aufgabe unterschiedliche Spannungsebenen.</p>
+</div>
+<div class="step-nav">
+<button class="btn-step" id="explPrev" onclick="stepExpl(-1)" disabled>← Zurück</button>
+<button class="btn-step" id="explNext" onclick="stepExpl(1)">Nächster Schritt →</button>
+<span class="step-count" id="explCount">1 / 4</span>
+</div>
+<div style="margin-top:20px;display:flex;justify-content:flex-end"><button class="btn btn-primary" id="btnToHerl" style="display:none" onclick="goSection(3)">Zur Herleitung →</button></div>
+</div>
+</div>
+
+<!-- SEC 4 -->
+<div class="section" id="sec3">
+<div class="card">
+<div class="tag tag-info">Mathematische Herleitung</div>
+<div class="card-title">Leitungsverluste – Schritt für Schritt</div>
+<div class="card-sub">Herleitung der Spannungsgleichung und Verlustformel.</div>
+<div class="step-indicator" id="herlDots"></div>
+<div class="step-content visible" id="herl0">
+<h3 style="color:var(--accent);margin-bottom:10px">Schritt 1: Das Modell</h3>
+<p class="expl-text">Wir modellieren Hin- und Rückleiter der Freileitung zusammenfassend als ohmschen Leitungswiderstand <span class="formula-var">R<sub>L</sub></span> in Reihe mit dem Verbraucher. Für eine homogene Leitung gilt näherungsweise:</p>
+<div class="formula-box">
+  R<sub>L</sub> = 2 · ρ · <span class="mf"><span class="num">l</span><span class="den">A</span></span><br>
+  <span style="font-size:0.8rem;color:var(--muted)">ρ: spezifischer Widerstand des Leitermaterials · l: einfache Leitungslänge · A: Leiterquerschnitt · Faktor 2: Hin- und Rückleiter</span>
+</div>
+<svg viewBox="0 0 500 75" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;background:#080d16;margin:12px 0">
+<rect x="10" y="18" width="55" height="36" rx="5" fill="#0d1828" stroke="#f0a500" stroke-width="1.5"/>
+<text x="37" y="40" font-family="monospace" font-size="11" fill="#f0a500" text-anchor="middle">U₁</text>
+<line x1="65" y1="28" x2="160" y2="28" stroke="#4fa3e0" stroke-width="2"/>
+<rect x="160" y="16" width="80" height="24" rx="4" fill="#0d1828" stroke="#e05c2e" stroke-width="1.5"/>
+<text x="200" y="32" font-family="monospace" font-size="11" fill="#e05c2e" text-anchor="middle">R_L</text>
+<line x1="240" y1="28" x2="360" y2="28" stroke="#4fa3e0" stroke-width="2"/>
+<rect x="360" y="16" width="80" height="24" rx="4" fill="#0d1828" stroke="#3ecf8e" stroke-width="1.5"/>
+<text x="400" y="32" font-family="monospace" font-size="11" fill="#3ecf8e" text-anchor="middle">U₂</text>
+<line x1="440" y1="55" x2="65" y2="55" stroke="#4fa3e0" stroke-width="2"/>
+<line x1="440" y1="40" x2="440" y2="55" stroke="#4fa3e0" stroke-width="2"/>
+<line x1="65" y1="28" x2="65" y2="55" stroke="#4fa3e0" stroke-width="2"/>
+</svg>
+</div>
+<div class="step-content" id="herl1">
+<h3 style="color:var(--accent);margin-bottom:10px">Schritt 2: Kirchhoff – Maschenregel</h3>
+<p class="expl-text">Nach der <strong>Kirchhoffschen Maschenregel</strong> gilt für die Reihenschaltung:</p>
+<div class="formula-box">U<sub>1</sub> = U<sub>2</sub> + U<sub>L</sub></div>
+<p class="expl-text"><span class="formula-var">U<sub>L</sub></span> ist der <strong>Spannungsabfall an der Leitung</strong>. Mit dem Ohmschen Gesetz gilt:</p>
+<div class="formula-box">U<sub>L</sub> = I · R<sub>L</sub></div>
+</div>
+<div class="step-content" id="herl2">
+<h3 style="color:var(--accent);margin-bottom:10px">Schritt 3: Strom aus der Leistung</h3>
+<p class="expl-text">Die am Verbraucher abgegebene elektrische Leistung:</p>
+<div class="formula-box">P = U<sub>2</sub> · I</div>
+<p class="expl-text">Auflösen nach I:</p>
+<div class="formula-box">I = <span class="mf"><span class="num">P</span><span class="den">U<sub>2</sub></span></span></div>
+<div class="info-row"><span class="icon">💡</span><p>Für dieselbe Leistung P ist der Strom I <strong>umgekehrt proportional</strong> zur Spannung. Doppelte Spannung → halber Strom.</p></div>
+</div>
+<div class="step-content" id="herl3">
+<h3 style="color:var(--accent);margin-bottom:10px">Schritt 4: Die Spannungsgleichung</h3>
+<p class="expl-text">Wir setzen <span class="formula-var">I = P / U<sub>2</sub></span> in <span class="formula-var">U<sub>L</sub> = I · R<sub>L</sub></span> ein:</p>
+<div class="formula-box">U<sub>L</sub> = <span class="mf"><span class="num">P · R<sub>L</sub></span><span class="den">U<sub>2</sub></span></span></div>
+<p class="expl-text">Einsetzen in die Maschengleichung <span class="formula-var">U<sub>1</sub> = U<sub>2</sub> + U<sub>L</sub></span> liefert:</p>
+<div class="formula-box highlight"><span class="formula-big">U<sub>1</sub> = U<sub>2</sub> + <span class="mf"><span class="num">P · R<sub>L</sub></span><span class="den">U<sub>2</sub></span></span></span><br><span style="font-size:0.78rem;color:var(--muted)">Spannungsgleichung der Freileitung im vereinfachten ohmschen Modell</span></div>
+</div>
+<div class="step-content" id="herl4">
+<h3 style="color:var(--accent);margin-bottom:10px">Schritt 5: Verlustleistung</h3>
+<p class="expl-text">Die in der Leitung als Wärme dissipierte Leistung:</p>
+<div class="formula-box">P<sub>V</sub> = I<sup>2</sup> · R<sub>L</sub></div>
+<p class="expl-text">Einsetzen von <span class="formula-var">I = P / U<sub>2</sub></span> ergibt:</p>
+<div class="formula-box">
+  P<sub>V</sub> =
+  <span class="mf"><span class="num">P</span><span class="den">U<sub>2</sub></span></span><sup>2</sup> · R<sub>L</sub>
+  =
+  <span class="mf"><span class="num">P<sup>2</sup> · R<sub>L</sub></span><span class="den">U<sub>2</sub><sup>2</sup></span></span>
+</div>
+<div class="formula-box highlight"><span class="formula-big">P<sub>V</sub> = <span class="mf"><span class="num">P<sup>2</sup> · R<sub>L</sub></span><span class="den">U<sub>2</sub><sup>2</sup></span></span></span><br><span style="font-size:0.78rem;color:var(--muted)">Verlustleistung der Freileitung im vereinfachten ohmschen Modell</span></div>
+<div class="think-box"><h4>🎯 Kernaussage</h4><p>Die Verlustleistung <span class="formula-var">P<sub>V</sub></span> ist umgekehrt proportional zum Quadrat der Übertragungsspannung <span class="formula-var">U<sub>2</sub></span>. Verdoppelt man <span class="formula-var">U<sub>2</sub></span>, sinkt <span class="formula-var">P<sub>V</sub></span> auf ein Viertel. Verzehnfacht man <span class="formula-var">U<sub>2</sub></span>, sinkt <span class="formula-var">P<sub>V</sub></span> auf ein Hundertstel.</p></div>
+</div>
+<div class="step-nav">
+<button class="btn-step" id="herlPrev" onclick="stepHerl(-1)" disabled>← Zurück</button>
+<button class="btn-step" id="herlNext" onclick="stepHerl(1)">Nächster Schritt →</button>
+<span class="step-count" id="herlCount">1 / 5</span>
+</div>
+<div style="margin-top:20px;display:flex;justify-content:flex-end"><button class="btn btn-primary" id="btnToAufg" style="display:none" onclick="goSection(4)">Zu den Aufgaben →</button></div>
+</div>
+</div>
+
+<!-- SEC 5 -->
+<div class="section" id="sec4">
+<div class="card">
+<div class="tag tag-nrw">25 Aufgaben · AFB I–III</div>
+<div class="card-title">Aufgaben &amp; Übungen</div>
+<div class="card-sub">Bearbeite die Aufgaben. Sie sind gestuft: Basis → Standard → Profi. Am Ende erhältst du eine Diagnose-Auswertung.</div>
+<div class="diff-grid">
+  <div class="diff-box"><h4 style="color:var(--green)">Basis · AFB I</h4><p>Aufgaben 1–8: Begriffe, Grundformeln, einfache Zusammenhänge.</p></div>
+  <div class="diff-box"><h4 style="color:var(--blue)">Standard · AFB II</h4><p>Aufgaben 9–18: Rechnen, Anwenden, Vergleichen.</p></div>
+  <div class="diff-box"><h4 style="color:var(--accent2)">Profi · AFB III</h4><p>Aufgaben 19–25: Transfer, Bewertung, Umstellen von Formeln.</p></div>
+</div>
+<div class="teacher-panel">
+  <h4>👩‍🏫 Lehrermodus</h4>
+  <div id="teacherLock" class="teacher-lock">
+    <input id="teacherPassword" type="password" placeholder="Passwort" autocomplete="off" onkeydown="if(event.key==='Enter')unlockTeacherMode()">
+    <button class="btn-step btn-sm" onclick="unlockTeacherMode()">Aktivieren</button>
+  </div>
+  <div class="teacher-actions locked" id="teacherActions" aria-hidden="true">
+    <button class="btn-step btn-sm" onclick="teacherShowSolutions()">Lösungen anzeigen</button>
+    <button class="btn-step btn-sm" onclick="teacherResetTasks()">Aufgaben zurücksetzen</button>
+    <button class="btn-step btn-sm" onclick="goSection(1)">Nur Simulation</button>
+    <button class="btn-step btn-sm" onclick="generatePDF()">Auswertung drucken</button>
+  </div>
+  <div class="teacher-note" id="teacherNote">Der Lehrermodus ist passwortgeschützt. Er ist für Besprechung, Diagnose und Wiederholung vorgesehen.</div>
+</div>
+<div class="abgabe-panel">
+  <p><strong>Abgabe:</strong> Sobald du fertig bist, erzeugst du hier deine Auswertung. Die Datei enthält deinen Namen/Kürzel, deine Anfangsvermutung, die AFB-Auswertung, Lernempfehlungen und alle Aufgaben mit Ergebnis.</p>
+  <button class="btn abgabe-btn" onclick="generatePDF()">📄 Abgabe-PDF erzeugen</button>
+</div>
+<div class="next-task-note" id="taskRevealNote">Die Aufgaben werden nacheinander freigeschaltet. Bearbeite Aufgabe 1, danach erscheint Aufgabe 2.</div>
+<div style="font-size:0.84rem;color:var(--muted);font-family:monospace">Aufgabe <span id="taskDoneCount">0</span> / <span id="taskTotalCount">25</span> bearbeitet</div>
+<div class="task-progress-bar"><div class="task-progress-fill" id="taskFill" style="width:0%"></div></div>
+<div id="taskContainer"></div>
+<div id="endScreen" class="end-screen" style="display:none">
+<div class="end-score" id="endScore">–</div>
+<div style="color:var(--muted);margin:6px 0 24px" id="endSub">–</div>
+<div class="score-breakdown">
+<div class="score-col"><div class="num" id="sc1" style="color:var(--green)">–</div><div class="lbl">AFB I (8)</div></div>
+<div class="score-col"><div class="num" id="sc2" style="color:var(--blue)">–</div><div class="lbl">AFB II (10)</div></div>
+<div class="score-col"><div class="num" id="sc3" style="color:var(--accent2)">–</div><div class="lbl">AFB III (7)</div></div>
+</div>
+<div id="tipsBox" style="text-align:left;margin:20px 0"></div>
+<button class="btn btn-primary" style="margin:0 auto" onclick="generatePDF()">📄 Auswertung öffnen &amp; drucken</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+var studentName='',currentSection=0;
+var sectionReached=[true,false,false,false,false];
+var explStep=0,herlStep=0,simMode='AC';
+var taskAnswered=[],taskCorrect=[],taskUserAnswers=[];
+var gapState={},selectedChip=null;
+var studentHypothesis='';
+function initTaskArrays(){taskAnswered=[];taskCorrect=[];taskUserAnswers=[];for(var _i=0;_i<TASKS.length;_i++){taskAnswered.push(false);taskCorrect.push(false);taskUserAnswers.push('–');}}
+
+function startApp(){
+  var n=document.getElementById('nameInput').value.trim();
+  if(!n){document.getElementById('nameInput').style.borderColor='var(--red)';return;}
+  studentName=n;
+  document.getElementById('nameModal').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('headerName').textContent=studentName;
+  updateProgress();
+  buildDots('explDots',4);
+  buildDots('herlDots',5);
+  initTaskArrays();
+  buildTasks();
+  var totalEl=document.getElementById('taskTotalCount');if(totalEl)totalEl.textContent=TASKS.length;
+  initCanvas();
+  updateSim();
+}
+
+function goSection(n){
+  var hyp=document.getElementById('hypothesisInput');if(hyp)studentHypothesis=hyp.value.trim();
+  document.getElementById('sec'+currentSection).classList.remove('active');
+  currentSection=n;sectionReached[n]=true;
+  document.getElementById('sec'+n).classList.add('active');
+  updateProgress();
+  window.scrollTo(0,0);
+}
+function updateProgress(){
+  document.getElementById('progressFill').style.width=((currentSection/4)*100)+'%';
+  for(var i=0;i<5;i++){
+    var l=document.getElementById('lbl'+i);
+    l.className='progress-label';
+    if(i===currentSection)l.classList.add('active');
+    else if(sectionReached[i]&&i<currentSection)l.classList.add('done');
+  }
+}
+
+
+function setScenario(type){
+  var U=document.getElementById('sl_U2'),P=document.getElementById('sl_P'),R=document.getElementById('sl_R'),info=document.getElementById('scenarioInfo'),ex=document.getElementById('scenarioExplanation');
+  var msg='',detail='';
+  if(type==='low'){U.value=20;P.value=100;R.value=10;msg='Niederspannung: 100 MW werden mit nur 20 kV übertragen. Dadurch entsteht ein sehr großer Leitungsstrom.';detail='<strong>Niederspannung fachlich gedeutet:</strong> Bei kleiner Spannung muss die Leitung für dieselbe Leistung einen großen Strom führen. Dieser Strom verursacht Joule\'sche Wärmeverluste nach P<sub>V</sub> = I<sup>2</sup> · R<sub>L</sub>. Aufgrund der quadratischen Abhängigkeit ist dieser Betriebsfall energetisch sehr ungünstig: Entscheidend ist nicht nur die übertragene Leistung, sondern die Kombination aus hoher Leistung, geringer Spannung und endlichem Leitungswiderstand.';}
+  if(type==='high'){U.value=380;P.value=100;R.value=10;msg='Hochspannung: Die gleiche Leistung wird mit 380 kV übertragen. Der Leitungsstrom ist deutlich kleiner.';detail='<strong>Hochspannung fachlich gedeutet:</strong> Die übertragene Leistung bleibt gleich, aber die Spannung ist wesentlich größer. Nach I = P/U sinkt dadurch die Stromstärke. Da die Verlustleistung proportional zu I<sup>2</sup> ist, verringern sich die thermischen Verluste überproportional. Das ist der zentrale Grund für Hochspannungsübertragung.';}
+  if(type==='wind'){U.value=380;P.value=500;R.value=30;msg='Windpark → Süden: Große Leistung trifft auf lange Leitung. Der Leitungswiderstand ist deutlich größer.';detail='<strong>Windpark → Süden vollständig erklärt:</strong> Bei langen Strecken wächst der Leitungswiderstand, weil mehr Leiterlänge vorhanden ist. Gleichzeitig können Windparks sehr große Leistungen liefern. Ohne hohe Spannung würde der Strom riesig werden. Die hohe Spannung hält den Strom und damit die Verluste in einem technisch akzeptablen Bereich.';}
+  if(type==='extreme'){U.value=30;P.value=500;R.value=30;msg='Extremfall: Viel Leistung, niedrige Spannung und große Leitungslänge. Das ist technisch kaum sinnvoll.';detail='<strong>Extremfall vollständig erklärt:</strong> Hier treten alle ungünstigen Faktoren gleichzeitig auf: hohe Leistung, niedrige Spannung, großer Leitungswiderstand. Der Strom wird extrem groß. Die Leitung würde viel Energie als Wärme abgeben, der Wirkungsgrad sinkt stark und die Leitung wäre thermisch stark belastet.';}
+  if(info)info.innerHTML='<span class="icon">🎛️</span><p><strong>Szenario:</strong> '+msg+'</p>';
+  if(ex)ex.innerHTML=detail+'<br><br><strong>Vergleiche jetzt:</strong> Achte besonders auf Strom I, Verlustleistung P<sub>V</sub> und Wirkungsgrad η. Der beste Fall ist nicht der mit der größten Leistung, sondern der mit einer passenden hohen Spannung und kontrollierbarem Leitungswiderstand.';
+  updateSim();
+}
+
+function switchSimTab(mode){
+  simMode=mode;
+  document.getElementById('tabAC').classList.toggle('active',mode==='AC');
+  document.getElementById('tabDC').classList.toggle('active',mode==='DC');
+  document.getElementById('simACi').style.display=mode==='AC'?'flex':'none';
+  document.getElementById('simDCi').style.display=mode==='DC'?'flex':'none';
+}
+function updateSim(){
+  var U2=parseFloat(document.getElementById('sl_U2').value)*1000;
+  var P=parseFloat(document.getElementById('sl_P').value)*1e6;
+  var RL=parseFloat(document.getElementById('sl_R').value);
+  document.getElementById('sv_U2').textContent=(U2/1000).toFixed(0)+' kV';
+  document.getElementById('sv_P').textContent=(P/1e6).toFixed(0)+' MW';
+  document.getElementById('sv_R').textContent=RL.toFixed(0)+' Ω';
+  var I=P/U2,UL=I*RL,PV=I*I*RL,eta=Math.max(0,(1-PV/P))*100;
+  document.getElementById('mI').textContent=I>=1000?(I/1000).toFixed(2)+' kA':I.toFixed(1)+' A';
+  document.getElementById('mUL').textContent=UL>=1000?(UL/1000).toFixed(1)+' kV':UL.toFixed(0)+' V';
+  var pve=document.getElementById('mPV');
+  pve.textContent=PV>=1e6?(PV/1e6).toFixed(2)+' MW':PV>=1000?(PV/1000).toFixed(1)+' kW':PV.toFixed(0)+' W';
+  pve.className='metric-value'+(PV/P>0.1?' warn':' good');
+  var ee=document.getElementById('mEta');
+  ee.textContent=eta.toFixed(1)+' %';
+  ee.className='metric-value'+(eta<90?' warn':' good');
+  window._sim={U2:U2,P:P,RL:RL,I:I,PV:PV,eta:eta};
+}
+
+function initCanvas(){
+  var canvas=document.getElementById('simCanvas');
+  var ctx=canvas.getContext('2d');
+  var t=0;
+  // Particle pools per segment
+  var segParticles={gen:[],ht:[],line:[],hb:[],vt:[],lo:[]};
+
+  function resize(){
+    var dpr=window.devicePixelRatio||1;
+    var W=canvas.offsetWidth;
+    canvas.width=W*dpr;
+    canvas.height=320*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  function rr(x,y,w,h,r){
+    r=Math.min(r,w/2,h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
+    ctx.closePath();
+  }
+
+  function lossColor(){
+    if(!window._sim)return'#3ecf8e';
+    var r=window._sim.PV/window._sim.P;
+    return r>0.3?'#e05c2e':r>0.1?'#f0a500':'#3ecf8e';
+  }
+
+  function drawBox(x,y,w,h,label,sublabel,borderCol){
+    ctx.fillStyle='#0d1828';
+    ctx.strokeStyle=borderCol||'#2a3c5a';
+    ctx.lineWidth=1.5;
+    rr(x,y,w,h,6);ctx.fill();ctx.stroke();
+    ctx.fillStyle=borderCol||'#e8edf5';
+    ctx.font='bold 11px system-ui';ctx.textAlign='center';
+    ctx.fillText(label,x+w/2,y+h/2+1);
+    if(sublabel){
+      ctx.fillStyle='#6b7fa3';ctx.font='9px monospace';
+      ctx.fillText(sublabel,x+w/2,y+h/2+13);
+    }
+  }
+
+  function drawTrafo(x,y,label,ratio,borderCol){
+    var w=52,h=64;
+    ctx.fillStyle='#0d1828';ctx.strokeStyle=borderCol||'#4fa3e0';ctx.lineWidth=1.5;
+    rr(x,y,w,h,6);ctx.fill();ctx.stroke();
+    // coil symbols
+    ctx.strokeStyle=borderCol||'#4fa3e0';ctx.lineWidth=1.5;
+    for(var i=0;i<3;i++){
+      ctx.beginPath();ctx.arc(x+14,y+18+i*10,5,Math.PI,0);ctx.stroke();
+    }
+    for(var j=0;j<3;j++){
+      ctx.beginPath();ctx.arc(x+38,y+18+j*10,5,0,Math.PI);ctx.stroke();
+    }
+    ctx.fillStyle=borderCol||'#4fa3e0';ctx.font='bold 9px monospace';ctx.textAlign='center';
+    ctx.fillText(label,x+w/2,y+h-6);
+    ctx.fillStyle='#6b7fa3';ctx.font='8px monospace';
+    ctx.fillText(ratio,x+w/2,y+h+12);
+  }
+
+  function drawGenerator(x,y,r){
+    ctx.fillStyle='#0d1828';ctx.strokeStyle='#f0a500';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // sine wave inside
+    ctx.strokeStyle='#f0a500';ctx.lineWidth=1.2;ctx.beginPath();
+    for(var i=-r+4;i<=r-4;i++){
+      var sy=y+Math.sin((i/(r-4))*Math.PI)*6;
+      i===-r+4?ctx.moveTo(x+i,sy):ctx.lineTo(x+i,sy);
+    }
+    ctx.stroke();
+    ctx.fillStyle='#f0a500';ctx.font='bold 9px monospace';ctx.textAlign='center';
+    ctx.fillText('G',x,y+r+12);
+    ctx.fillStyle='#6b7fa3';ctx.font='8px monospace';
+    ctx.fillText('20 kV',x,y+r+22);
+  }
+
+  function drawMast(x,y,h2){
+    ctx.strokeStyle='#2a3c5a';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(x,y+h2);ctx.lineTo(x,y);ctx.stroke();
+    ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(x-14,y+12);ctx.lineTo(x+14,y+12);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-10,y+2);ctx.lineTo(x+10,y+2);ctx.stroke();
+  }
+
+  function drawHouse(x,y){
+    ctx.fillStyle='#1a2a3a';ctx.strokeStyle='#2a3c5a';ctx.lineWidth=1;
+    ctx.beginPath();ctx.rect(x-18,y,36,28);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#1e3550';ctx.beginPath();
+    ctx.moveTo(x-22,y);ctx.lineTo(x+22,y);ctx.lineTo(x,y-18);ctx.closePath();
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle='rgba(240,165,0,0.3)';
+    ctx.beginPath();ctx.rect(x-6,y+12,12,16);ctx.fill();
+    ctx.fillStyle='#6b7fa3';ctx.font='8px monospace';ctx.textAlign='center';
+    ctx.fillText('230 V',x,y+36);
+  }
+
+  // Layout: 6 stations across the canvas
+  // Generator(left) → Trafo Hoch → Mast+Freileitung → Trafo Verteil → Trafo Haus → Haus(right)
+  // Wire path: bottom loop connects everything
+
+  function draw(){
+    var W=canvas.offsetWidth,H=320;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#07090f';ctx.fillRect(0,0,W,H);
+
+    var sim=window._sim||{U2:100000,P:100e6,RL:10,I:1000,PV:1e7,eta:90};
+    var lc=lossColor();
+    var isAC=simMode==='AC';
+    var wireCol=isAC?'#4fa3e0':'#f0a500';
+
+    // --- Layout positions (responsive) ---
+    var pad=18;
+    var GX=pad+20,     GY=140; // generator center
+    var T1X=pad+60,    T1Y=92; // Hochspannungstrafo
+    var M1X=pad+140,   M1Y=72; // Mast 1 top
+    var MH=80; // mast height
+    var LY=M1X;        // freileitung y (wire top)
+    var M2X=W-pad-140;
+    var T2X=W-pad-110, T2Y=92; // Verteiltrafo
+    var T3X=W-pad-54,  T3Y=130;// Ortsnetztransformator
+    var HX=W-pad-20,   HY=160; // house center
+
+    var wireY=100; // top wire y
+    var retY=240;  // bottom return wire y
+
+    // ── Draw wires first (behind everything) ──
+    // Top wire: T1 output → M1 top → M2 top → T2 input
+    ctx.strokeStyle=wireCol;ctx.lineWidth=2;ctx.setLineDash([]);
+
+    // Low voltage left: Generator → T1 primary
+    ctx.beginPath();ctx.moveTo(GX,GY-16);ctx.lineTo(GX,wireY);ctx.lineTo(T1X+8,wireY);ctx.stroke();
+
+    // High voltage: T1 secondary → freileitung → T2 primary
+    ctx.strokeStyle='#f0a500';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(T1X+44,wireY);ctx.lineTo(M1X,wireY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(M1X,wireY);ctx.lineTo(M2X,wireY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(M2X,wireY);ctx.lineTo(T2X+8,wireY);ctx.stroke();
+    // second wire (dashed return at top)
+    ctx.setLineDash([4,4]);ctx.strokeStyle='#f0a500';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(T1X+44,wireY+8);ctx.lineTo(T2X+8,wireY+8);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Medium voltage: T2 → T3
+    ctx.strokeStyle='#3ecf8e';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(T2X+44,wireY+20);ctx.lineTo(T3X+4,wireY+20);ctx.stroke();
+
+    // Low voltage: T3 → House
+    ctx.strokeStyle=wireCol;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(T3X+44,wireY+40);ctx.lineTo(HX,wireY+40);ctx.lineTo(HX,HY-16);ctx.stroke();
+
+    // Bottom return wire (earth return)
+    ctx.strokeStyle='#2a3c5a';ctx.lineWidth=1.5;ctx.setLineDash([3,5]);
+    ctx.beginPath();ctx.moveTo(GX,GY+16);ctx.lineTo(GX,retY);ctx.lineTo(HX,retY);ctx.lineTo(HX,HY+16);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Voltage labels on wires ──
+    ctx.fillStyle='#f0a500';ctx.font='bold 9px monospace';ctx.textAlign='center';
+    ctx.fillText(isAC?(Math.round(sim.U2/1000)+' kV AC'):(Math.round(sim.U2/1000)+' kV DC'),(M1X+M2X)/2,wireY-8);
+    ctx.fillStyle='#3ecf8e';ctx.font='9px monospace';
+    ctx.fillText('10–20 kV',(T2X+T3X)/2+20,wireY+14);
+    ctx.fillStyle='#6b7fa3';ctx.font='9px monospace';
+    ctx.fillText('0,4 kV',HX,wireY+33);
+
+    // ── Freileitung: Masten ──
+    drawMast(M1X,M1Y,MH);drawMast(M2X,M1Y,MH);
+    // wire sag between masts
+    ctx.strokeStyle='#f0a500';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(M1X-10,wireY);ctx.quadraticCurveTo((M1X+M2X)/2,wireY+18,M2X+10,wireY);ctx.stroke();
+    ctx.setLineDash([3,4]);ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(M1X-10,wireY+8);ctx.quadraticCurveTo((M1X+M2X)/2,wireY+26,M2X+10,wireY+8);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Heat glow on freileitung
+    var ratio=sim.PV/sim.P;
+    if(ratio>0.03){
+      var alpha=Math.min(0.4,ratio)*(0.6+0.4*Math.sin(t*0.08));
+      ctx.strokeStyle='rgba(224,92,46,'+alpha+')';ctx.lineWidth=8;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(M1X,wireY);ctx.quadraticCurveTo((M1X+M2X)/2,wireY+18,M2X,wireY);ctx.stroke();
+      ctx.lineCap='butt';
+      // Heat shimmer labels
+      ctx.fillStyle='rgba(224,92,46,'+(alpha*2)+')';ctx.font='bold 9px monospace';ctx.textAlign='center';
+      ctx.fillText('♨ P_V = '+(sim.PV>=1e6?(sim.PV/1e6).toFixed(1)+' MW':(sim.PV/1000).toFixed(0)+' kW'),(M1X+M2X)/2,wireY+38);
+    }
+
+    // ── Draw components ──
+    drawGenerator(GX,GY,20);
+    drawTrafo(T1X,T1Y,'T1','20kV→'+Math.round(sim.U2/1000)+'kV','#f0a500');
+    drawTrafo(T2X,T2Y,'T2',Math.round(sim.U2/1000)+'kV→20kV','#3ecf8e');
+    drawTrafo(T3X,T3Y,'T3','20kV→0.4kV','#4fa3e0');
+    drawHouse(HX,HY);
+
+    // ── Current label left (low voltage) ──
+    var Igen=sim.P/20000; // current at generator side (~20kV)
+    ctx.fillStyle='#f0a500';ctx.font='9px monospace';ctx.textAlign='left';
+    ctx.fillText('I='+(Igen>=1000?(Igen/1000).toFixed(1)+'kA':Igen.toFixed(0)+'A'),GX+4,GY-26);
+
+    // ── Current label freileitung ──
+    ctx.fillStyle='#f0a500';ctx.font='bold 9px monospace';ctx.textAlign='center';
+    ctx.fillText('I = '+(sim.I>=1000?(sim.I/1000).toFixed(2)+' kA':sim.I.toFixed(0)+' A'),(M1X+M2X)/2,wireY+50);
+
+    // ── Sinewaves inside segment wires (AC only) ──
+    if(isAC){
+      ctx.strokeStyle='rgba(79,163,224,0.25)';ctx.lineWidth=1;
+      ctx.beginPath();
+      for(var xx=T1X+44;xx<T2X+8;xx++){
+        var sy=wireY+4+5*Math.sin((xx-T1X)/(M2X-M1X)*8*Math.PI+t*0.07);
+        xx===T1X+44?ctx.moveTo(xx,sy):ctx.lineTo(xx,sy);
+      }
+      ctx.stroke();
+    }
+
+    // ── Particles ──
+    // Each segment: generator→T1, T1→freileitung, freileitung, T2→T3, T3→house
+    var segs=[
+      {key:'gen', x1:GX, y1:wireY, x2:T1X+8, y2:wireY, col:wireCol, speed:1.5, count:4},
+      {key:'ht',  x1:T1X+44, y1:wireY, x2:M1X, y2:wireY, col:'#f0a500', speed:0.8+(sim.I/3000), count:Math.min(8,Math.max(2,Math.round(sim.I/800)))},
+      {key:'line',x1:M1X, y1:wireY, x2:M2X, y2:wireY, col:lc, speed:0.8+(sim.I/3000), count:Math.min(15,Math.max(3,Math.round(sim.I/400)))},
+      {key:'hb',  x1:M2X, y1:wireY, x2:T2X+8, y2:wireY, col:'#f0a500', speed:0.8+(sim.I/3000), count:Math.min(8,Math.max(2,Math.round(sim.I/800)))},
+      {key:'vt',  x1:T2X+44, y1:wireY+20, x2:T3X+4, y2:wireY+20, col:'#3ecf8e', speed:1.8, count:5},
+      {key:'lo',  x1:T3X+44, y1:wireY+40, x2:HX, y2:wireY+40, col:wireCol, speed:2.5, count:4}
+    ];
+
+    for(var s=0;s<segs.length;s++){
+      var seg=segs[s];
+      var pool=segParticles[seg.key];
+      while(pool.length<seg.count)pool.push({pct:Math.random()});
+      if(pool.length>seg.count)pool=pool.slice(0,seg.count);
+      segParticles[seg.key]=pool;
+      var dx=seg.x2-seg.x1,dy=seg.y2-seg.y1,len=Math.sqrt(dx*dx+dy*dy);
+      var spd=seg.speed/(len||1)*2.5;
+      for(var pi=0;pi<pool.length;pi++){
+        pool[pi].pct+=(isAC&&seg.key==='line'?Math.sin(t*0.06)*spd+spd*0.3:spd);
+        if(pool[pi].pct>1)pool[pi].pct-=1;
+        var px=seg.x1+dx*pool[pi].pct;
+        var py=seg.y1+dy*pool[pi].pct;
+        var pc=typeof seg.col==='string'?seg.col:seg.col();
+        ctx.fillStyle=pc;ctx.shadowBlur=6;ctx.shadowColor=pc;
+        ctx.beginPath();ctx.arc(px,py,2.5,0,Math.PI*2);ctx.fill();
+        ctx.shadowBlur=0;
+      }
+    }
+
+    // ── Legend bottom ──
+    var ly=H-22;
+    ctx.fillStyle='#6b7fa3';ctx.font='8px monospace';ctx.textAlign='left';
+    ctx.fillStyle='#f0a500';ctx.fillRect(pad,ly-5,10,4);
+    ctx.fillStyle='#6b7fa3';ctx.fillText('Hochspannung (Freileitung)',pad+13,ly);
+    ctx.fillStyle='#3ecf8e';ctx.fillRect(pad+140,ly-5,10,4);
+    ctx.fillStyle='#6b7fa3';ctx.fillText('Mittelspannung',pad+153,ly);
+    ctx.fillStyle=wireCol;ctx.fillRect(pad+250,ly-5,10,4);
+    ctx.fillStyle='#6b7fa3';ctx.fillText('Niederspannung',pad+263,ly);
+
+    t++;requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+var simQA={
+  1:{correct:2,fb:{0:'✗ Nein. P_V sinkt sogar.',1:'✗ P_V sinkt stärker als nur um die Hälfte.',2:'✓ Richtig! P_V = P²·R_L/U₂². Verdopplung U₂ → P_V ÷ 4.',3:'✗ Nein, U₂ hat starken Einfluss.'}},
+  2:{correct:2,fb:{0:'✗ Es geht um Transformation, nicht Gefährlichkeit.',1:'✗ Der Leitungswiderstand der Leitung ist dadurch nicht grundsätzlich anders.',2:'✓ Richtig! Im klassischen AC-Netz lassen Transformatoren die Spannung einfach hoch- und heruntersetzen. Moderne HGÜ ist ein Sonderfall für lange Strecken.',3:'✗ Die Leitungsgeschwindigkeit ist nicht der Grund.'}}
+};
+function answerSimQ(q,choice){
+  var qa=simQA[q];
+  var opts=document.getElementById('simq'+q).querySelectorAll('.mc-opt');
+  for(var i=0;i<opts.length;i++){
+    opts[i].disabled=true;
+    if(i===qa.correct)opts[i].classList.add('correct');
+    else if(i===choice&&choice!==qa.correct)opts[i].classList.add('wrong');
+  }
+  var fb=document.getElementById('simfb'+q);
+  fb.textContent=qa.fb[choice];
+  fb.className='feedback-box show '+(choice===qa.correct?'correct-fb':'wrong-fb');
+}
+
+function buildDots(id,count){
+  var w=document.getElementById(id);w.innerHTML='';
+  for(var i=0;i<count;i++){
+    var d=document.createElement('div');
+    d.className='step-dot'+(i===0?' active':'');
+    d.id=id+'d'+i;d.textContent=i+1;w.appendChild(d);
+  }
+}
+function updateDots(id,step,total){
+  for(var i=0;i<total;i++){
+    var d=document.getElementById(id+'d'+i);
+    if(d)d.className='step-dot'+(i===step?' active':i<step?' done':'');
+  }
+}
+function stepExpl(dir){
+  document.getElementById('expl'+explStep).classList.remove('visible');
+  explStep=Math.max(0,Math.min(3,explStep+dir));
+  document.getElementById('expl'+explStep).classList.add('visible');
+  updateDots('explDots',explStep,4);
+  document.getElementById('explPrev').disabled=explStep===0;
+  document.getElementById('explNext').disabled=explStep===3;
+  document.getElementById('explCount').textContent=(explStep+1)+' / 4';
+  document.getElementById('btnToHerl').style.display=explStep===3?'inline-flex':'none';
+}
+function stepHerl(dir){
+  document.getElementById('herl'+herlStep).classList.remove('visible');
+  herlStep=Math.max(0,Math.min(4,herlStep+dir));
+  document.getElementById('herl'+herlStep).classList.add('visible');
+  updateDots('herlDots',herlStep,5);
+  document.getElementById('herlPrev').disabled=herlStep===0;
+  document.getElementById('herlNext').disabled=herlStep===4;
+  document.getElementById('herlCount').textContent=(herlStep+1)+' / 5';
+  document.getElementById('btnToAufg').style.display=herlStep===4?'inline-flex':'none';
+}
+
+var TASKS=[
+{id:1,afb:1,type:'mc',q:'Welche Aussage beschreibt den Grund für Hochspannung bei der Energieübertragung korrekt?',opts:['A) Hochspannung ist sicherer','B) Hoher Strom führt zu kleinen Verlusten','C) Hohe Spannung macht bei gleicher Leistung den Strom klein','D) Hochspannung verringert den Leitungswiderstand'],correct:2,explain:'Bei P = U·I gilt: hohe Spannung → kleiner Strom. Da P_V = I²·R_L sinken die Verluste stark.'},
+{id:2,afb:1,type:'mc',q:'Welche Formel beschreibt die Verlustleistung einer Freileitung korrekt?',opts:['A) P_V = P·R_L·U₂','B) P_V = P²·R_L/U₂²','C) P_V = U₂²/(P·R_L)','D) P_V = I·U₂'],correct:1,explain:'Aus I = P/U₂ und P_V = I²·R_L folgt: P_V = P²·R_L/U₂².'},
+{id:3,afb:1,type:'mc',q:'Warum ist Wechselspannung im klassischen Stromnetz besonders vorteilhaft?',opts:['A) AC hat keinen Widerstand','B) AC fließt ohne Wärmeverluste','C) AC-Spannung lässt sich mit Transformatoren leicht verändern','D) DC kann nie über große Strecken übertragen werden'],correct:2,explain:'Transformatoren ermöglichen im AC-Netz ein einfaches Hoch- und Heruntersetzen der Spannung. Moderne HGÜ ist ein DC-Sonderfall.'},
+{id:4,afb:1,type:'gap',q:'Ergänze die fehlenden Begriffe im Lückentext.',text:'Bei der Übertragung elektrischer Energie entsteht an der Leitung ein [SLOT1], da die Leitung einen [SLOT2] besitzt. Durch [SLOT3] kann die Spannung hochgesetzt werden, wodurch der Strom und damit die [SLOT4] sinken.',slots:['SLOT1','SLOT2','SLOT3','SLOT4'],answers:{SLOT1:'Spannungsabfall',SLOT2:'Widerstand',SLOT3:'Transformatoren',SLOT4:'Verlustleistung'},pool:['Spannungsabfall','Widerstand','Transformatoren','Verlustleistung','Induktanz','Magnetfeld','Kondensatoren','Leistungsüberschuss'],explain:'Spannungsabfall → Widerstand → Transformatoren → Verlustleistung.'},
+{id:5,afb:1,type:'gap',q:'Ergänze die Spannungsgleichung der Freileitung.',text:'Nach der Maschenregel gilt: U1 = U2 + [SLOT1]. Der Spannungsabfall ergibt sich aus UL = [SLOT2] · R_L. Mit I = [SLOT3] ergibt sich: U1 = U2 + [SLOT4].',slots:['SLOT1','SLOT2','SLOT3','SLOT4'],answers:{SLOT1:'U_L',SLOT2:'I',SLOT3:'P/U2',SLOT4:'P·RL/U2'},pool:['U_L','I','P/U2','P·RL/U2','U2','R_L','P·U2','I2·R_L'],explain:'U1 = U2 + U_L = U2 + I·R_L = U2 + (P/U2)·R_L.'},
+{id:6,afb:1,type:'mc',q:'Was bedeutet der Leitungswiderstand R_L im Modell?',opts:['A) Widerstand des Verbrauchers','B) Gesamtwiderstand von Hin- und Rückleiter','C) Spannung am Generator','D) elektrische Leistung der Leitung'],correct:1,explain:'R_L fasst im Modell den Widerstand der Leitung zusammen.'},
+{id:7,afb:1,type:'mc',q:'Welche Einheit passt zur Verlustleistung P_V?',opts:['A) Volt','B) Ampere','C) Watt','D) Ohm'],correct:2,explain:'Leistung wird in Watt gemessen, große Leistungen oft in MW.'},
+{id:8,afb:1,type:'mc',q:'Was passiert mit dem Strom I, wenn bei gleicher Leistung P die Spannung U verdoppelt wird?',opts:['A) I verdoppelt sich','B) I halbiert sich','C) I vervierfacht sich','D) I bleibt gleich'],correct:1,explain:'I = P/U. Bei gleicher Leistung führt doppelte Spannung zum halben Strom.'},
+
+{id:9,afb:2,type:'calc',q:'Eine Freileitung überträgt P = 200 MW bei U₂ = 220 kV. Berechne den Strom I in Ampere.',answer:909,unit:'A',tol:0.02,explain:'I = P/U₂ = 200·10⁶ / 220·10³ ≈ 909 A'},
+{id:10,afb:2,type:'calc',q:'Mit P = 200 MW, U₂ = 220 kV, R_L = 8 Ω: Berechne die Verlustleistung P_V in MW.',answer:6.61,unit:'MW',tol:0.03,explain:'P_V = P²·R_L/U₂² ≈ 6,61 MW'},
+{id:11,afb:2,type:'calc',q:'Berechne den Wirkungsgrad η in Prozent (P_V = 6,61 MW, P = 200 MW).',answer:96.7,unit:'%',tol:0.02,explain:'η = (1 – P_V/P)·100 = (1 – 6,61/200)·100 ≈ 96,7 %'},
+{id:12,afb:2,type:'mc',q:'Bei U₂ = 100 kV beträgt P_V = 2 MW. Was passiert mit P_V, wenn U₂ auf 200 kV verdoppelt wird?',opts:['A) 4 MW','B) 1 MW','C) 0,5 MW','D) 2 MW'],correct:2,explain:'P_V ~ 1/U₂². Verdopplung → ein Viertel: 2 MW / 4 = 0,5 MW.'},
+{id:13,afb:2,type:'mc',q:'Aluminium-Freileitung: ρ = 2,7·10⁻⁸ Ωm, l = 200 km, A = 400 mm². Wie groß ist R_L für Hin- und Rückleiter?',opts:['A) 13,5 Ω','B) 27 Ω','C) 6,75 Ω','D) 54 Ω'],correct:1,explain:'R_L = 2·ρ·l/A = 27 Ω.'},
+{id:14,afb:2,type:'calc',q:'Eine Leitung hat R_L = 12 Ω, P = 150 MW, U₂ = 300 kV. Berechne P_V in MW.',answer:3.0,unit:'MW',tol:0.03,explain:'P_V = (150·10⁶)²·12/(300·10³)² = 3,0 MW.'},
+{id:15,afb:2,type:'mc',q:'Welche Aussage beschreibt den quadratischen Zusammenhang richtig?',opts:['A) Dreifache Spannung führt zu dreifachen Verlusten','B) Dreifache Spannung führt zu einem Drittel der Verluste','C) Dreifache Spannung führt zu einem Neuntel der Verluste','D) Dreifache Spannung ändert nichts'],correct:2,explain:'Da P_V ~ 1/U₂² gilt: 3-fache Spannung → 1/9 der Verluste.'},
+{id:16,afb:2,type:'gap',q:'Ordne die Ursache-Wirkungs-Kette.',text:'Gleiche Leistung bei höherer Spannung bedeutet: kleinerer [SLOT1]. Dadurch sinkt wegen P_V = [SLOT2] · R_L die [SLOT3]. Das Netz arbeitet dadurch mit höherem [SLOT4].',slots:['SLOT1','SLOT2','SLOT3','SLOT4'],answers:{SLOT1:'Strom',SLOT2:'I²',SLOT3:'Verlustleistung',SLOT4:'Wirkungsgrad'},pool:['Strom','I²','Verlustleistung','Wirkungsgrad','Spannungsquelle','Frequenz','Erdung','Leiterfarbe'],explain:'Höhere Spannung → kleinerer Strom → I² kleiner → Verlustleistung sinkt → Wirkungsgrad steigt.'},
+{id:17,afb:2,type:'calc',q:'Bei P = 100 MW und U₂ = 400 kV: Berechne den Strom I.',answer:250,unit:'A',tol:0.02,explain:'I = P/U₂ = 100·10⁶ / 400·10³ = 250 A.'},
+{id:18,afb:2,type:'mc',q:'Warum reicht es nicht, nur dickere Leitungen zu bauen?',opts:['A) Dickere Leitungen erhöhen immer den Widerstand','B) Dickere Leitungen senken R_L, sind aber teuer und schwer; Hochspannung senkt zusätzlich den Strom','C) Dickere Leitungen funktionieren nur bei DC','D) Dickere Leitungen verhindern Transformation'],correct:1,explain:'Größerer Querschnitt senkt R_L, aber Material, Gewicht und Kosten steigen.'},
+
+{id:19,afb:3,type:'calc',q:'500 km-Trasse (R_L = 25 Ω), P = 500 MW, U₂ = 380 kV. Berechne P_V in MW.',answer:43.28,unit:'MW',tol:0.03,explain:'P_V = (500·10⁶)²·25/(380·10³)² ≈ 43,28 MW.'},
+{id:20,afb:3,type:'calc',q:'Berechne U₁ in kV: P=500 MW, R_L=25 Ω, U₂=380 kV.',answer:412.895,unit:'kV',tol:0.02,explain:'U₁ = U₂ + P·R_L/U₂ ≈ 412,9 kV.'},
+{id:21,afb:3,type:'mc',q:'P_V soll unter 1 % von P bleiben. R_L = 20 Ω, P = 300 MW. Welche Mindestspannung U₂ ist erforderlich?',opts:['A) ≥ 100 kV','B) ≥ 245 kV','C) ≥ 380 kV','D) ≥ 500 kV'],correct:1,explain:'P_V/P < 0,01 → U₂² > P·R_L/0,01 → U₂ > 245 kV.'},
+{id:22,afb:3,type:'mc',q:'Vergleich: 100 MW bei 10 kV und 100 MW bei 400 kV. Beide R_L = 10 Ω. Um welchen Faktor sind die Verluste bei 400 kV kleiner?',opts:['A) 40','B) 400','C) 1600','D) 40 000'],correct:2,explain:'P_V ~ 1/U₂². (400/10)² = 1600.'},
+{id:23,afb:3,type:'calc',q:'P = 1000 MW, R_L = 30 Ω, max. 2 % Verluste. Mindestspannung U₂ in kV?',answer:387,unit:'kV',tol:0.01,explain:'U₂² ≥ P·R_L/0,02 = 1,5·10¹² → U₂ ≥ 387 kV.'},
+{id:24,afb:3,type:'mc',q:'Warum ist HGÜ heute trotz DC wieder wichtig?',opts:['A) DC besitzt keinen Widerstand','B) Moderne Leistungselektronik ermöglicht hohe Gleichspannungen; bei langen Strecken kann HGÜ Vorteile haben','C) Transformatoren funktionieren mit DC einfacher','D) HGÜ ist immer billiger'],correct:1,explain:'HGÜ nutzt moderne Leistungselektronik und kann bei langen Punkt-zu-Punkt-Strecken oder Seekabeln vorteilhaft sein.'},
+{id:25,afb:3,type:'mc',q:'Bewerte: „Man sollte einfach immer die Spannung maximal erhöhen.“ Welche Antwort ist am besten?',opts:['A) Ja, höhere Spannung hat nur Vorteile','B) Nein, höhere Spannung senkt Verluste, erfordert aber Isolation, Sicherheitsabstände, Transformatoren und höhere Kosten','C) Nein, höhere Spannung erhöht immer die Verluste','D) Ja, weil der Strom dann verschwindet'],correct:1,explain:'Technische Systeme müssen Verluste, Sicherheit, Isolation, Kosten und Netzstruktur abwägen.'}
+];
+
+function buildTasks(){
+  var c=document.getElementById('taskContainer');c.innerHTML='';
+  var totalEl=document.getElementById('taskTotalCount');if(totalEl)totalEl.textContent=TASKS.length;
+  for(var i=0;i<TASKS.length;i++){
+    var el=makeTaskEl(TASKS[i]);
+    if(i>0)el.classList.add('task-locked');
+    c.appendChild(el);
+  }
+  var note=document.getElementById('taskRevealNote');
+  if(note)note.textContent='Die Aufgaben werden nacheinander freigeschaltet. Bearbeite Aufgabe 1, danach erscheint Aufgabe 2.';
+}
+function makeTaskEl(task){
+  var div=document.createElement('div');div.className='task-card';div.id='task_'+task.id;
+  var aL=['','I','II','III'],aC=['','afb1','afb2','afb3'],tL={mc:'Multiple Choice',gap:'Lückentext',calc:'Rechenaufgabe'};
+  var h='<div class="task-meta"><span class="afb-badge '+aC[task.afb]+'">AFB '+aL[task.afb]+'</span><span class="type-badge">'+tL[task.type]+'</span><span class="type-badge" style="margin-left:auto">Aufgabe '+task.id+'</span></div>';
+  h+='<div class="task-q">'+task.q+'</div>';
+  if(task.type==='mc'){
+    h+='<div class="mc-options" id="mc_'+task.id+'">';
+    for(var i=0;i<task.opts.length;i++)h+='<button class="mc-opt" onclick="answerMC('+task.id+','+i+')">'+task.opts[i]+'</button>';
+    h+='</div>';
+  } else if(task.type==='gap'){
+    h+=makeGapHtml(task);
+  } else {
+    h+='<div class="calc-input-row"><input type="number" step="any" class="calc-input" id="calc_'+task.id+'" placeholder="Antwort"><span class="calc-unit">'+task.unit+'</span><button class="btn-step btn-sm" onclick="answerCalc('+task.id+')">Prüfen</button></div>';
+  }
+  h+='<div class="feedback-box" id="fb_'+task.id+'"></div>';
+  div.innerHTML=h;return div;
+}
+function makeGapHtml(task){
+  if(!gapState[task.id])gapState[task.id]={};
+  var pool=[].concat(task.pool).sort(function(){return Math.random()-0.5;});
+  var h='<div class="drag-pool" id="pool_'+task.id+'">';
+  for(var i=0;i<pool.length;i++){
+    var w=pool[i],sid='chip_'+task.id+'_'+w.replace(/[^a-zA-Z0-9]/g,'X');
+    h+='<span class="drag-chip" id="'+sid+'" onclick="selectChip('+task.id+',\''+w+'\')">'+w+'</span>';
+  }
+  h+='</div><div class="gap-text" id="gt_'+task.id+'">';
+  var txt=task.text;
+  for(var j=0;j<task.slots.length;j++){
+    var sl=task.slots[j];
+    txt=txt.replace('['+sl+']','<span class="gap-slot" id="slot_'+task.id+'_'+sl+'" onclick="fillSlot('+task.id+',\''+sl+'\')">Tippe hier</span>');
+  }
+  h+=txt+'</div><div style="margin-top:10px"><button class="btn-step btn-sm" onclick="checkGap('+task.id+')">Antwort prüfen</button></div>';
+  return h;
+}
+function selectChip(tid,word){
+  var cs=document.querySelectorAll('.drag-chip.selected');
+  for(var i=0;i<cs.length;i++)cs[i].classList.remove('selected');
+  selectedChip={tid:tid,word:word};
+  var el=document.getElementById('chip_'+tid+'_'+word.replace(/[^a-zA-Z0-9]/g,'X'));
+  if(el)el.classList.add('selected');
+}
+function fillSlot(tid,slot){
+  if(!selectedChip||selectedChip.tid!==tid)return;
+  if(!gapState[tid])gapState[tid]={};
+  var old=gapState[tid][slot];
+  if(old){var oe=document.getElementById('chip_'+tid+'_'+old.replace(/[^a-zA-Z0-9]/g,'X'));if(oe)oe.classList.remove('used');}
+  gapState[tid][slot]=selectedChip.word;
+  var ce=document.getElementById('chip_'+tid+'_'+selectedChip.word.replace(/[^a-zA-Z0-9]/g,'X'));
+  if(ce){ce.classList.remove('selected');ce.classList.add('used');}
+  var se=document.getElementById('slot_'+tid+'_'+slot);
+  if(se){se.textContent=selectedChip.word;se.classList.add('filled');}
+  selectedChip=null;
+}
+function checkGap(tid){
+  var task=null;for(var i=0;i<TASKS.length;i++)if(TASKS[i].id===tid){task=TASKS[i];break;}
+  if(!task)return;
+  var st=gapState[tid]||{},ok=true;
+  for(var j=0;j<task.slots.length;j++){
+    var sl=task.slots[j],el=document.getElementById('slot_'+tid+'_'+sl);
+    if(!el)continue;
+    el.classList.remove('filled');
+    if(st[sl]===task.answers[sl])el.classList.add('correct');
+    else{el.classList.add('wrong');ok=false;}
+  }
+  var chips=document.querySelectorAll('#pool_'+tid+' .drag-chip');
+  for(var k=0;k<chips.length;k++){chips[k].classList.add('used');chips[k].onclick=null;}
+  showFeedback(tid,ok,task.explain);
+  markTask(tid,ok,ok?'Korrekt':'Fehler vorhanden');
+}
+function answerMC(tid,choice){
+  var task=null;for(var i=0;i<TASKS.length;i++)if(TASKS[i].id===tid){task=TASKS[i];break;}
+  if(!task)return;
+  var opts=document.querySelectorAll('#mc_'+tid+' .mc-opt');
+  for(var i=0;i<opts.length;i++){
+    opts[i].disabled=true;
+    if(i===task.correct)opts[i].classList.add('correct');
+    else if(i===choice&&choice!==task.correct)opts[i].classList.add('wrong');
+  }
+  var ok=choice===task.correct;
+  showFeedback(tid,ok,task.explain);
+  markTask(tid,ok,task.opts[choice]);
+}
+function answerCalc(tid){
+  var task=null;for(var i=0;i<TASKS.length;i++)if(TASKS[i].id===tid){task=TASKS[i];break;}
+  if(!task)return;
+  var inp=document.getElementById('calc_'+tid);
+  var val=parseFloat(inp.value);
+  if(isNaN(val)){inp.style.borderColor='var(--red)';return;}
+  var ok=Math.abs(val-task.answer)/Math.abs(task.answer)<=task.tol;
+  inp.classList.add(ok?'correct':'wrong');inp.disabled=true;
+  showFeedback(tid,ok,task.explain+(ok?'':' | Richtig: '+task.answer+' '+task.unit));
+  markTask(tid,ok,val+' '+task.unit);
+}
+function showFeedback(tid,ok,txt){
+  var fb=document.getElementById('fb_'+tid);
+  fb.textContent=(ok?'✓ Richtig! ':'✗ Falsch. ')+txt;
+  fb.className='feedback-box show '+(ok?'correct-fb':'wrong-fb');
+}
+function markTask(tid,ok,ua){
+  var idx=tid-1;
+  if(taskAnswered[idx])return;
+  taskAnswered[idx]=true;taskCorrect[idx]=ok;taskUserAnswers[idx]=ua||'–';
+  var done=0;for(var i=0;i<TASKS.length;i++)if(taskAnswered[i])done++;
+  document.getElementById('taskDoneCount').textContent=done;
+  document.getElementById('taskFill').style.width=(done/TASKS.length*100)+'%';
+  revealNextTask(tid);
+  if(done===TASKS.length)showEnd();
+}
+function revealNextTask(tid){
+  var next=document.getElementById('task_'+(tid+1));
+  var note=document.getElementById('taskRevealNote');
+  if(next){
+    next.classList.remove('task-locked');
+    if(note)note.textContent='Aufgabe '+(tid+1)+' wurde freigeschaltet.';
+    setTimeout(function(){next.scrollIntoView({behavior:'smooth',block:'start'});},180);
+  } else {
+    if(note)note.textContent='Alle Aufgaben sind bearbeitet. Erzeuge jetzt deine Abgabe-PDF.';
+  }
+}
+
+function unlockTeacherMode(){
+  var input=document.getElementById('teacherPassword');
+  var actions=document.getElementById('teacherActions');
+  var lock=document.getElementById('teacherLock');
+  var note=document.getElementById('teacherNote');
+  var value=input?input.value:'';
+  if(value==='Ros1083'){
+    if(actions){actions.classList.remove('locked');actions.setAttribute('aria-hidden','false');}
+    if(lock)lock.style.display='none';
+    if(note)note.textContent='Lehrermodus aktiviert. Funktionen nur für Lehrkraft/Plenum nutzen.';
+  }else{
+    if(input){input.value='';input.style.borderColor='var(--red)';input.placeholder='Falsches Passwort';}
+    if(note)note.textContent='Lehrermodus nicht aktiviert: falsches Passwort.';
+  }
+}
+
+function teacherShowSolutions(){
+  var locked=document.querySelectorAll('.task-card.task-locked');for(var l=0;l<locked.length;l++)locked[l].classList.remove('task-locked');
+  for(var i=0;i<TASKS.length;i++){
+    var t=TASKS[i];
+    if(taskAnswered[i])continue;
+    if(t.type==='mc'){answerMC(t.id,t.correct);}
+    else if(t.type==='calc'){
+      var inp=document.getElementById('calc_'+t.id);if(inp)inp.value=t.answer;
+      answerCalc(t.id);
+    } else if(t.type==='gap'){
+      if(!gapState[t.id])gapState[t.id]={};
+      for(var j=0;j<t.slots.length;j++){
+        var sl=t.slots[j],ans=t.answers[sl];
+        gapState[t.id][sl]=ans;
+        var se=document.getElementById('slot_'+t.id+'_'+sl);if(se){se.textContent=ans;se.classList.add('filled');}
+      }
+      checkGap(t.id);
+    }
+  }
+}
+function teacherResetTasks(){
+  if(!confirm('Alle Aufgabenantworten zurücksetzen?'))return;
+  initTaskArrays();gapState={};selectedChip=null;
+  buildTasks();
+  document.getElementById('taskDoneCount').textContent='0';
+  document.getElementById('taskFill').style.width='0%';
+  document.getElementById('endScreen').style.display='none';
+}
+function getAfbStats(){
+  var stats={1:{total:0,correct:0},2:{total:0,correct:0},3:{total:0,correct:0}};
+  for(var i=0;i<TASKS.length;i++){
+    var a=TASKS[i].afb;stats[a].total++;
+    if(taskCorrect[i])stats[a].correct++;
+  }
+  return stats;
+}
+function showEnd(){
+  var t=0;for(var i=0;i<TASKS.length;i++)if(taskCorrect[i])t++;
+  var stats=getAfbStats();
+  document.getElementById('endScore').textContent=t+'/'+TASKS.length;
+  document.getElementById('endSub').textContent='Aufgaben korrekt ('+Math.round(t/TASKS.length*100)+' %)';
+  document.getElementById('sc1').textContent=stats[1].correct+'/'+stats[1].total;
+  document.getElementById('sc2').textContent=stats[2].correct+'/'+stats[2].total;
+  document.getElementById('sc3').textContent=stats[3].correct+'/'+stats[3].total;
+  document.getElementById('tipsBox').innerHTML=buildTips(t,stats);
+  document.getElementById('endScreen').style.display='block';
+  document.getElementById('endScreen').scrollIntoView({behavior:'smooth'});
+}
+
+
+function percent(n,d){return d?Math.round(n/d*100):0;}
+function getWrongIds(){var wrong=[];for(var i=0;i<TASKS.length;i++){if(!taskCorrect[i])wrong.push(TASKS[i].id);}return wrong;}
+function idsHit(ids,wrong){return wrong.filter(function(id){return ids.indexOf(id)>=0;});}
+function scoreBand(pct){if(pct>=92)return {note:'sehr sicher',grade:'sehr gut',color:'var(--green)'};if(pct>=78)return {note:'sicher',grade:'gut',color:'var(--green)'};if(pct>=62)return {note:'grundlegend sicher',grade:'befriedigend',color:'var(--blue)'};if(pct>=45)return {note:'teilweise sicher',grade:'ausreichend',color:'var(--accent)'};return {note:'unsicher',grade:'noch nicht ausreichend',color:'var(--accent2)'};}
+function competenceDiagnostics(stats,total){
+  var wrong=getWrongIds();
+  var groups=[
+    {key:'basis',title:'Grundbegriffe und Modell der Freileitung',ids:[1,4,6,7,8],train:'Wiederhole: Strom I, Spannung U, Leitungswiderstand R_L, Spannungsabfall U_L und Verlustleistung P_V. Erkläre in eigenen Worten: Die Leitung ist kein idealer Leiter, sondern besitzt Widerstand und erwärmt sich.'},
+    {key:'formel',title:'Formeln und Herleitung',ids:[2,5,12,15,16,21,23],train:'Übe die Herleitung: P = U₂ · I → I = P/U₂. Danach in P_V = I² · R_L einsetzen. Entscheidend ist das Quadrat: P_V sinkt mit U₂².'},
+    {key:'rechnung',title:'Rechenweg und Einheiten',ids:[9,10,11,13,14,17,19,20,23],train:'Trainiere konsequente Einheitenumrechnung: MW in W, kV in V, km in m, mm² in m². Schreibe vor jedem Einsetzen die Formel auf und prüfe die Größenordnung.'},
+    {key:'wirkungsgrad',title:'Verluste und Wirkungsgrad interpretieren',ids:[10,11,14,19,20,21,22,25],train:'Übe, P_V im Verhältnis zu P zu deuten: Ist der Verlust klein oder groß? Wirkungsgrad: η = (1 − P_V/P) · 100 %. Begründe technische Entscheidungen nicht nur rechnerisch, sondern auch physikalisch.'},
+    {key:'acdc',title:'AC, Transformator und HGÜ',ids:[3,18,24,25],train:'Wiederhole: AC ist im klassischen Verbundnetz vorteilhaft, weil Transformatoren Spannung einfach ändern. HGÜ ist heute für lange Punkt-zu-Punkt-Strecken und Seekabel relevant, benötigt aber Leistungselektronik.'},
+    {key:'transfer',title:'Bewerten und Transfer',ids:[18,21,22,23,24,25],train:'Übe Bewertungsaufgaben: Nenne Vorteil, Grenze und technische Abwägung. Beispiel: höhere Spannung senkt Verluste, verlangt aber mehr Isolation, größere Sicherheitsabstände und höhere Kosten.'}
+  ];
+  for(var g=0;g<groups.length;g++){groups[g].wrong=idsHit(groups[g].ids,wrong);groups[g].total=groups[g].ids.length;groups[g].correct=groups[g].total-groups[g].wrong.length;groups[g].pct=percent(groups[g].correct,groups[g].total);}
+  return groups;
+}
+function buildTips(total,stats){
+  var pct=percent(total,TASKS.length), band=scoreBand(pct), groups=competenceDiagnostics(stats,total), wrong=getWrongIds();
+  var html='<div class="think-box"><h4>📊 Diagnose</h4><p><strong>Gesamtstand:</strong> '+total+' von '+TASKS.length+' Aufgaben korrekt ('+pct+' %). Das entspricht fachlich: <strong>'+band.note+'</strong>.</p><p>Für die Note sollte diese Auswertung mit Rechenwegen, Mitarbeit und ggf. schriftlicher Begründung abgeglichen werden.</p></div>';
+  html+='<div class="metrics-grid">';
+  html+='<div class="metric-box"><div class="metric-label">AFB I · Reproduktion</div><div class="metric-value">'+stats[1].correct+'/'+stats[1].total+' ('+percent(stats[1].correct,stats[1].total)+' %)</div></div>';
+  html+='<div class="metric-box"><div class="metric-label">AFB II · Anwendung</div><div class="metric-value">'+stats[2].correct+'/'+stats[2].total+' ('+percent(stats[2].correct,stats[2].total)+' %)</div></div>';
+  html+='<div class="metric-box"><div class="metric-label">AFB III · Transfer</div><div class="metric-value">'+stats[3].correct+'/'+stats[3].total+' ('+percent(stats[3].correct,stats[3].total)+' %)</div></div>';
+  html+='<div class="metric-box"><div class="metric-label">Fehlerschwerpunkte</div><div class="metric-value '+(wrong.length>8?'warn':'')+'">'+wrong.length+'</div></div>';
+  html+='</div>';
+  html+='<h4 style="color:var(--accent);margin:16px 0 8px">Was du konkret üben musst</h4>';
+  var any=false;
+  for(var i=0;i<groups.length;i++){
+    var g=groups[i];
+    if(g.wrong.length>0){any=true;var sev=g.pct<60?'wrong-fb':'correct-fb';
+      html+='<div class="feedback-box show '+sev+'"><strong>'+g.title+'</strong><br>Falsche/unsichere Aufgaben: '+g.wrong.join(', ')+'<br><em>Übe:</em> '+g.train+'</div>';
+    }
+  }
+  if(!any){html+='<div class="feedback-box show correct-fb"><strong>Keine Fehlerschwerpunkte.</strong><br>Du kannst als Vertiefung AC-Übertragung und HGÜ anhand realer Netzausbauprojekte vergleichen.</div>';}
+  html+='<h4 style="color:var(--accent);margin:16px 0 8px">Prioritäten für die Wiederholung</h4>';
+  var sorted=groups.slice().sort(function(a,b){return a.pct-b.pct;});
+  html+='<ol style="line-height:1.8;margin-left:20px">';
+  for(var j=0;j<Math.min(3,sorted.length);j++){if(sorted[j].wrong.length>0)html+='<li><strong>'+sorted[j].title+'</strong> ('+sorted[j].pct+' % sicher): '+sorted[j].train+'</li>';}
+  html+='</ol>';
+  if(studentHypothesis){
+    html+='<div class="think-box"><h4>🔁 Vergleich mit deiner Anfangsvermutung</h4><p><strong>Deine Vermutung:</strong> '+escapeHtml(studentHypothesis)+'</p><p><strong>Physikalisch korrekt:</strong> Freileitungen besitzen einen Widerstand. Bei gleicher Leistung führt eine höhere Spannung zu kleinerem Strom. Weil die Wärmeverluste nach P<sub>V</sub> = I<sup>2</sup> · R<sub>L</sub> vom Quadrat des Stroms abhängen, sinken sie stark.</p></div>';
+  }
+  return html;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];});
+}
+
+
+function generatePDF(){
+  var doneCount=0;for(var dc=0;dc<TASKS.length;dc++)if(taskAnswered[dc])doneCount++;
+  if(doneCount<TASKS.length){if(!confirm('Es sind erst '+doneCount+' von '+TASKS.length+' Aufgaben bearbeitet. Trotzdem eine Abgabe-PDF erzeugen?'))return;}
+  var hyp=document.getElementById('hypothesisInput');if(hyp)studentHypothesis=hyp.value.trim();
+  var total=0,rows='';
+  var aL=['','I','II','III'],tL={mc:'MC',gap:'Lücken',calc:'Rechnen'};
+  for(var i=0;i<TASKS.length;i++){
+    var t2=TASKS[i];if(taskCorrect[i])total++;
+    var bg=taskAnswered[i]?(taskCorrect[i]?'#e9f8ef':'#fdecec'):'#f1f1f1';
+    var res=taskAnswered[i]?(taskCorrect[i]?'✓ richtig':'✗ falsch'):'nicht bearbeitet';
+    var ans=escapeHtml(taskUserAnswers[i]||'–');
+    var correctText='';
+    if(t2.type==='mc')correctText=escapeHtml(t2.opts[t2.correct]||'');
+    else if(t2.type==='calc')correctText=escapeHtml(String(t2.answer)+' '+(t2.unit||''));
+    else if(t2.type==='gap')correctText=escapeHtml(Object.keys(t2.answers).map(function(k){return t2.answers[k];}).join(' · '));
+    rows+='<tr style="background:'+bg+'"><td>'+t2.id+'</td><td>AFB '+aL[t2.afb]+'</td><td>'+tL[t2.type]+'</td><td>'+escapeHtml(t2.q)+'</td><td>'+ans+'</td><td>'+correctText+'</td><td style="font-weight:700">'+res+'</td></tr>';
+  }
+  var pct=percent(total,TASKS.length), stats=getAfbStats(), groups=competenceDiagnostics(stats,total), band=scoreBand(pct);
+  var sL=['01 Einstieg','02 Simulation','03 Erklärung','04 Herleitung','05 Aufgaben'],sRows='';
+  for(var j=0;j<5;j++)sRows+='<tr><td>'+sL[j]+'</td><td>'+(sectionReached[j]?'✓ erreicht':'– nicht erreicht')+'</td></tr>';
+  var gradeSuggestion=suggestGrade(pct,stats);
+  var w2=window.open('','_blank');
+  if(!w2){alert('Bitte Popups erlauben, um die Auswertung zu öffnen.');return;}
+  var diagRows='';
+  for(var g=0;g<groups.length;g++){
+    var gr=groups[g];
+    diagRows+='<tr><td><strong>'+gr.title+'</strong></td><td>'+gr.correct+'/'+gr.total+' ('+gr.pct+' %)</td><td>'+(gr.wrong.length?gr.wrong.join(', '):'keine')+'</td><td>'+escapeHtml(gr.train)+'</td></tr>';
+  }
+  var hypHtml=studentHypothesis?'<h2>Anfangsvermutung und fachlicher Abgleich</h2><div class="box"><p><strong>Schülervermutung:</strong> '+escapeHtml(studentHypothesis)+'</p><p><strong>Fachlicher Kern:</strong> Freileitungen besitzen Widerstand. Hohe Spannung senkt bei gleicher Leistung den Strom. Da P<sub>V</sub> = I<sup>2</sup> · R<sub>L</sub> gilt, sinken die Verluste quadratisch.</p></div>':'';
+  w2.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Auswertung – '+escapeHtml(studentName)+'</title><style>body{font-family:system-ui,sans-serif;background:#fff;color:#111;padding:24px;max-width:1100px;margin:0 auto;line-height:1.5}h1{margin:0;color:#111}h2{color:#1d4f7a;margin:22px 0 8px;font-size:1.05rem;border-bottom:1px solid #ddd;padding-bottom:4px}.header{border:2px solid #111;border-radius:10px;padding:20px;margin-bottom:16px;display:flex;justify-content:space-between;gap:20px}.name{font-size:1.4rem;font-weight:700}.score{font-size:2.4rem;font-weight:800}.meta{color:#555;font-size:0.9rem}.box{border:1px solid #ccc;border-radius:8px;padding:12px;background:#fafafa}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{padding:7px 8px;text-align:left;border:1px solid #ddd;font-size:0.78rem;vertical-align:top}th{background:#e9eef5}.small{font-size:0.82rem;color:#444}.teacher{background:#fff7df;border:1px solid #e0b94d;border-radius:8px;padding:12px}.print-btn{background:#111;color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;display:block;margin:24px auto}@media print{.print-btn{display:none}body{padding:8mm}.header{break-inside:avoid}tr{break-inside:avoid}}</style></head><body>');
+  w2.document.write('<div class="header"><div><h1>Abgabe-Auswertung: Freileitung</h1><div class="name">'+escapeHtml(studentName||'ohne Namen')+'</div><div class="meta">Q1 GK Physik NRW · erstellt am '+new Date().toLocaleString('de-DE')+'</div></div><div style="text-align:right"><div class="score">'+total+'/'+TASKS.length+'</div><div>'+pct+' % korrekt</div><div class="small">Gesamt: '+band.note+'</div></div></div>');
+  w2.document.write('<h2>Lehrkraft-Übersicht / Bewertungsgrundlage</h2><div class="teacher"><p><strong>Automatischer Notenvorschlag:</strong> '+gradeSuggestion+'</p><p class="small">Hinweis: Der Vorschlag basiert nur auf den automatisch auswertbaren Antworten. Für eine Note sollten Rechenwege, Begründungen, mündliche Mitarbeit und ggf. Bearbeitungszeit berücksichtigt werden.</p></div>');
+  w2.document.write('<h2>AFB-Auswertung</h2><div class="grid"><div class="stat"><strong>Gesamt</strong><br>'+total+'/'+TASKS.length+' · '+pct+' %</div><div class="stat"><strong>AFB I</strong><br>'+stats[1].correct+'/'+stats[1].total+' · '+percent(stats[1].correct,stats[1].total)+' %</div><div class="stat"><strong>AFB II</strong><br>'+stats[2].correct+'/'+stats[2].total+' · '+percent(stats[2].correct,stats[2].total)+' %</div><div class="stat"><strong>AFB III</strong><br>'+stats[3].correct+'/'+stats[3].total+' · '+percent(stats[3].correct,stats[3].total)+' %</div></div>');
+  w2.document.write(hypHtml);
+  w2.document.write('<h2>Diagnose: Was muss geübt werden?</h2><table><tr><th>Kompetenzbereich</th><th>Sicherheit</th><th>Falsche Aufgaben</th><th>Konkrete Übeempfehlung</th></tr>'+diagRows+'</table>');
+  w2.document.write('<h2>Lernfortschritt im Material</h2><table><tr><th>Sektion</th><th>Status</th></tr>'+sRows+'</table>');
+  w2.document.write('<h2>Detaillierte Aufgabenauswertung</h2><table><tr><th>Nr.</th><th>AFB</th><th>Typ</th><th>Aufgabe</th><th>Schülerantwort</th><th>Erwartung</th><th>Ergebnis</th></tr>'+rows+'</table>');
+  w2.document.write('<button class="print-btn" onclick="window.print()">🖨️ Als PDF speichern / drucken</button></body></html>');
+  w2.document.close();
+}
+function suggestGrade(pct,stats){
+  var afb3pct=percent(stats[3].correct,stats[3].total);
+  var txt='';
+  if(pct>=92)txt='1 (sehr gut)';
+  else if(pct>=78)txt='2 (gut)';
+  else if(pct>=62)txt='3 (befriedigend)';
+  else if(pct>=45)txt='4 (ausreichend)';
+  else if(pct>=25)txt='5 (mangelhaft)';
+  else txt='6 (ungenügend)';
+  if(afb3pct<40 && pct>=78)txt+=' – Achtung: Transfer/AFB III schwach, ggf. nicht höher als 3 bewerten';
+  return txt;
+}
+</script>
+</body>
+</html>
